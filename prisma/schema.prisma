@@ -28,17 +28,20 @@ model User {
   surveyStatuses SurveyStatus[]
   userGroups     UserGroup[]
   objectGroups   ObjectGroup[]
+  Instance       Instance[]
 }
 
 model Instance {
   instanceid          Int              @id @default(autoincrement())
   instanceName        String
   instanceDescription String?
+  adminid             Int
   startDate           DateTime
   endDate             DateTime
   createdAt           DateTime         @default(now())
   updatedAt           DateTime         @updatedAt
   deletedAt           DateTime?
+  user                User             @relation(fields: [adminid], references: [userid])
   surveys             Survey[]
   surveyItems         SurveyItem[]
   userGroups          UserGroup[]
@@ -146,6 +149,7 @@ model UserGroup {
   usergroupid       Int       @id @default(autoincrement())
   instanceid        Int
   userid            Int
+  groupid           Int
   deleted           Boolean   @default(false)
   timestamp_created DateTime  @default(now())
   timestamp_updated DateTime  @updatedAt
