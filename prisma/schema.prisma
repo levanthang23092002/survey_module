@@ -1,0 +1,207 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  userid         Int              @id @default(autoincrement())
+  username       String           @unique
+  email          String           @unique
+  password       String
+  firstName      String?
+  lastName       String?
+  role           String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  deletedAt      DateTime?
+  surveys        SurveyResponse[]
+  surveyStatuses SurveyStatus[]
+  userGroups     UserGroup[]
+  objectGroups   ObjectGroup[]
+}
+
+model Instance {
+  instanceid          Int              @id @default(autoincrement())
+  instanceName        String
+  instanceDescription String?
+  startDate           DateTime
+  endDate             DateTime
+  createdAt           DateTime         @default(now())
+  updatedAt           DateTime         @updatedAt
+  deletedAt           DateTime?
+  surveys             Survey[]
+  surveyItems         SurveyItem[]
+  userGroups          UserGroup[]
+  modules             Module[]
+  objectGroups        ObjectGroup[]
+  SurveyResponse      SurveyResponse[]
+  SurveyStatus        SurveyStatus[]
+}
+
+model Survey {
+  surveyid          Int              @id @default(autoincrement())
+  surveyName        String
+  surveyDescription String?
+  thankYouMessage   String?
+  displayInOnePage  Boolean
+  duration          Int?
+  password          String?
+  showCorrectAnswer Boolean
+  type              String
+  day               DateTime
+  displayOrder      Int?
+  instanceid        Int
+  points            Int?
+  groupid           Int?
+  privateid         String?
+  hidden            Boolean
+  deleted           Boolean          @default(false)
+  timestamp_created DateTime         @default(now())
+  timestamp_updated DateTime         @updatedAt
+  timestamp_deleted DateTime?
+  instance          Instance         @relation(fields: [instanceid], references: [instanceid])
+  surveyItems       SurveyItem[]
+  surveyStatuses    SurveyStatus[]
+  SurveyResponse    SurveyResponse[]
+}
+
+model SurveyItem {
+  surveyitemid      Int              @id @default(autoincrement())
+  surveyid          Int
+  instanceid        Int
+  parentSurveyid    Int?
+  surveySectionid   Int?
+  type              String
+  image             String?
+  options           Json?
+  question          String
+  description       String?
+  choice1           String?
+  choice2           String?
+  choice3           String?
+  choice4           String?
+  questionnum       Int
+  subquestion       String?
+  subnum            Int?
+  required          Boolean
+  showDescription   Boolean
+  applyGoTo         Json?
+  nextSurveyItemid  Int?
+  applyValidation   Json?
+  shuffleChoice     Boolean
+  hasCommentField   Boolean
+  deleted           Boolean          @default(false)
+  timestamp_created DateTime         @default(now())
+  timestamp_updated DateTime         @updatedAt
+  timestamp_deleted DateTime?
+  survey            Survey           @relation(fields: [surveyid], references: [surveyid])
+  instance          Instance         @relation(fields: [instanceid], references: [instanceid])
+  SurveyResponse    SurveyResponse[]
+}
+
+model SurveyResponse {
+  responseid        Int        @id @default(autoincrement())
+  surveyid          Int
+  instanceid        Int
+  userid            Int
+  surveyitemid      Int
+  answer            String?
+  timestamp_created DateTime   @default(now())
+  survey            Survey     @relation(fields: [surveyid], references: [surveyid])
+  instance          Instance   @relation(fields: [instanceid], references: [instanceid])
+  user              User       @relation(fields: [userid], references: [userid])
+  surveyItem        SurveyItem @relation(fields: [surveyitemid], references: [surveyitemid])
+}
+
+model SurveyStatus {
+  id                Int       @id @default(autoincrement())
+  instanceid        Int
+  userid            Int
+  adminid           Int?
+  surveyid          Int
+  uuid              String    @unique
+  timestamp_started DateTime
+  timestamp_ended   DateTime?
+  isReusable        Boolean
+  deleted           Boolean   @default(false)
+  timestamp_created DateTime  @default(now())
+  timestamp_updated DateTime  @updatedAt
+  timestamp_deleted DateTime?
+  instance          Instance  @relation(fields: [instanceid], references: [instanceid])
+  user              User      @relation(fields: [userid], references: [userid])
+  survey            Survey    @relation(fields: [surveyid], references: [surveyid])
+}
+
+model UserGroup {
+  usergroupid       Int       @id @default(autoincrement())
+  instanceid        Int
+  userid            Int
+  deleted           Boolean   @default(false)
+  timestamp_created DateTime  @default(now())
+  timestamp_updated DateTime  @updatedAt
+  timestamp_deleted DateTime?
+  instance          Instance  @relation(fields: [instanceid], references: [instanceid])
+  user              User      @relation(fields: [userid], references: [userid])
+}
+
+model Module {
+  id                Int       @id @default(autoincrement())
+  instanceid        Int
+  moduleid          Int
+  modulename        String
+  isDuplicated      Boolean
+  displayOrder      Int?
+  activated         Boolean
+  featured          Boolean
+  options           Json?
+  iconid            Int?
+  iconColor         String?
+  deleted           Boolean   @default(false)
+  timestamp_created DateTime  @default(now())
+  timestamp_updated DateTime  @updatedAt
+  timestamp_deleted DateTime?
+  instance          Instance  @relation(fields: [instanceid], references: [instanceid])
+}
+
+model ModuleAvailable {
+  id                Int       @id @default(autoincrement())
+  settingName       String
+  name              String
+  icon              String?
+  permission        String?
+  helpText          String?
+  activateByDefault Boolean
+  order             Int?
+  iconid            Int?
+  iconColor         String?
+  isMobile          Boolean
+  isWeb             Boolean
+  isDuplicatable    Boolean
+  deleted           Boolean   @default(false)
+  timestamp_deleted DateTime?
+}
+
+model ObjectGroup {
+  id                Int       @id @default(autoincrement())
+  type              String
+  objectid          Int
+  groupid           Int
+  userid            Int?
+  instanceid        Int
+  deleted           Boolean   @default(false)
+  timestamp_created DateTime  @default(now())
+  timestamp_updated DateTime  @updatedAt
+  timestamp_deleted DateTime?
+  instance          Instance  @relation(fields: [instanceid], references: [instanceid])
+  user              User?     @relation(fields: [userid], references: [userid])
+}
