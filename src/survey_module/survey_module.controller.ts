@@ -4,35 +4,87 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Post,
   Query,
 } from '@nestjs/common';
 import { SurveyModuleService } from './survey_module.service';
 import {
+  CreateSurveyResponse,
   DetailSurvey,
   InputSurvey,
   ListSurvey,
-  UserdDetailSurvey,
 } from './dto/survey.dto';
+import { ApiTags } from '@nestjs/swagger';
 
-@Controller('module')
+@Controller('')
+@ApiTags('Survey')
 export class SurveyModuleController {
-  constructor(private surveyservice: SurveyModuleService) {}
+  constructor(private surveyService: SurveyModuleService) {}
 
-  @Get(':moduleid/surveys/:surveyid')
+  @Get(':userId/:instanceId/module/:moduleid/surveys/:surveyid')
   async getSurveyDetail(
-    @Body() body: UserdDetailSurvey,
-    @Param('moduleid', ParseIntPipe) moduleid: number, // hoặc dùng kiểu dữ liệu phù hợp với moduleid
-    @Param('surveyid', ParseIntPipe) surveyid: number, // hoặc dùng kiểu dữ liệu phù hợp với surveyid
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('instanceId', ParseIntPipe) instanceId: number,
+    @Param('moduleid', ParseIntPipe) moduleId: number, // hoặc dùng kiểu dữ liệu phù hợp với moduleid
+    @Param('surveyid', ParseIntPipe) surveyId: number, // hoặc dùng kiểu dữ liệu phù hợp với surveyid
   ): Promise<DetailSurvey> {
-    return await this.surveyservice.getdetailsurvey(body, surveyid, moduleid);
+    return await this.surveyService.getDetailSurvey(
+      userId,
+      instanceId,
+      surveyId,
+      moduleId,
+    );
   }
-  @Get(':moduleid/surveys')
+  @Get(':userId/:instanceId/module/:moduleid/surveys')
   async getListSurvey(
-    @Body() body: UserdDetailSurvey,
-    @Query() data: InputSurvey,
-    @Param('moduleid', ParseIntPipe) moduleid: number, // hoặc dùng kiểu dữ liệu phù hợp với moduleid
-    // hoặc dùng kiểu dữ liệu phù hợp với surveyid
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('instanceId', ParseIntPipe) instanceId: number,
+    @Param('moduleid', ParseIntPipe) moduleId: number,
+    @Query('page', ParseIntPipe) page: number,
+    @Query('itemPerPage', ParseIntPipe) itemPerPage: number,
   ): Promise<ListSurvey> {
-    return await this.surveyservice.getsurveys(body, data, moduleid);
+    const data: InputSurvey = {
+      page,
+      itemPerPage,
+    };
+    return await this.surveyService.getSurveys(
+      userId,
+      instanceId,
+      data,
+      moduleId,
+    );
+  }
+
+  @Get(':userId/:instanceId/module:moduleid/surveys/:surveyid/result')
+  async getUserSurveyResponse(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('instanceId', ParseIntPipe) instanceId: number,
+    @Param('surveyid', ParseIntPipe) surveyId: number,
+    @Param('moduleid', ParseIntPipe) moduleId: number, // hoặc dùng kiểu dữ liệu phù hợp với moduleid
+    // hoặc dùng kiểu dữ liệu phù hợp với surveyid
+  ): Promise<any> {
+    return await this.surveyService.getSurveyResponse(
+      userId,
+      instanceId,
+      moduleId,
+      surveyId,
+    );
+  }
+
+  @Post(':userId/:instanceId/module:moduleid/surveys/:surveyid/submit')
+  async addUserSurveyResponse(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('instanceId', ParseIntPipe) instanceId: number,
+    @Param('surveyid', ParseIntPipe) surveyId: number,
+    @Param('moduleid', ParseIntPipe) moduleId: number,
+    @Body() body: CreateSurveyResponse,
+  ): Promise<any> {
+    return await this.surveyService.addSurveyResponse(
+      userId,
+      instanceId,
+      moduleId,
+      surveyId,
+      body,
+    );
   }
 }

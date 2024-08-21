@@ -1,215 +1,299 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
 import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { SurveyModuleRepository } from './repository/survey_module.repository';
+import {
+  CreateSurveyResponse,
   DetailSurvey,
   InputSurvey,
   ListSurvey,
-  UserdDetailSurvey,
 } from './dto/survey.dto';
+import { SurveyResponseEntity } from './entities/survey_response';
 
 @Injectable()
 export class SurveyModuleService {
-  constructor(private prismaservice: PrismaService) {}
+  constructor(private SurveyRepo: SurveyModuleRepository) {}
 
-  async isSurveyModuleActivated(moduleId: number, instanceId: number) {
-    const module = await this.prismaservice.module.findFirst({
-      where: {
-        id: moduleId,
-        instanceid: instanceId,
-        deleted: false,
-        activated: true,
-      },
-    });
-    return !!module;
+  async getDetailSurvey(
+    userId: number,
+    instanceId: number,
+    surveyId: number,
+    moduleId: number,
+  ): Promise<DetailSurvey> {
+    try {
+      const isActivated = await this.SurveyRepo.isSurveyModuleActivated(
+        moduleId,
+        instanceId,
+      );
+
+      if (!isActivated) {
+        throw new NotFoundException({
+          message: 'Survey module is not activated',
+        });
+      }
+      const userGroup = await this.SurveyRepo.getUserGroup(userId, instanceId);
+      if (!userGroup) {
+        throw new NotFoundException({
+          message: 'No friends found in this event',
+        });
+      }
+      const isGroupActivated = await this.SurveyRepo.isGroupActivated(
+        userGroup.groupid,
+        instanceId,
+      );
+      if (!isGroupActivated) {
+        throw new NotFoundException({
+          message: 'No friends found in this event  ',
+        });
+      }
+      const isGroupInSurvey = await this.SurveyRepo.isGroupInSurvey(
+        surveyId,
+        userGroup.groupid,
+        instanceId,
+      );
+      if (!isGroupInSurvey) {
+        throw new NotFoundException({
+          message: 'No friends found in this event  ',
+        });
+      }
+
+      const surveyDetail = await this.SurveyRepo.findSurveyItems(
+        surveyId,
+        instanceId,
+      );
+      const result: DetailSurvey = {
+        data: surveyDetail,
+        total: surveyDetail.length,
+      };
+      return result;
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'An unexpected error occurred. Please try again later.',
+      });
+    }
   }
-  async getUserGroup(userId: number, instanceId: number) {
-    const userGroup = await this.prismaservice.userGroup.findFirst({
-      where: {
-        userid: userId,
-        instanceid: instanceId,
-        deleted: false,
-      },
-    });
-    return userGroup;
+
+  async getSurveys(
+    userId: number,
+    instanceId: number,
+    data: InputSurvey,
+    moduleId: number,
+  ): Promise<ListSurvey> {
+    try {
+      const page = Number(data.page) || 1;
+      const perPage = Number(data.itemPerPage) || 12;
+      const skip = page > 1 ? (page - 1) * perPage : 0;
+
+      const isActivated = await this.SurveyRepo.isSurveyModuleActivated(
+        moduleId,
+        instanceId,
+      );
+
+      if (!isActivated) {
+        throw new HttpException(
+          { message: 'Survey module is not activated' },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      const userGroup = await this.SurveyRepo.getUserGroup(userId, instanceId);
+      if (!userGroup) {
+        throw new HttpException(
+          { message: 'You Do Not Have Permission In This Event ' },
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
+      const isGroupActivated = await this.SurveyRepo.isGroupActivated(
+        userGroup.groupid,
+        instanceId,
+      );
+
+      if (!isGroupActivated) {
+        throw new UnauthorizedException({
+          message: 'You Do Not Have Permission In This Event ',
+        });
+      }
+
+      const listSurvey = await this.SurveyRepo.findListSurvey(
+        instanceId,
+        userGroup.groupid,
+        perPage,
+        skip,
+      );
+      const total = await this.SurveyRepo.counttotalListSurvey(
+        instanceId,
+        userGroup.groupid,
+      );
+
+      const result: ListSurvey = {
+        total: total,
+        itemPerPage: perPage,
+        page: page,
+        listSurvey: listSurvey,
+      };
+
+      return result;
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'An unexpected error occurred. Please try again later.',
+      });
+    }
   }
-  async isGroupActivated(userGroupId: number, instanceId: number) {
-    const objectGroup = await this.prismaservice.objectGroup.findFirst({
-      where: {
-        groupid: userGroupId,
-        instanceid: instanceId,
-        deleted: false,
-      },
-    });
-    return !!objectGroup; // Trả về true nếu nhóm đã được kích hoạt
+
+  async getSurveyResponse(
+    userId: number,
+    instanceId: number,
+    moduleId: number,
+    surveyId: number,
+  ): Promise<SurveyResponseEntity[]> {
+    try {
+      const isActivated = await this.SurveyRepo.isSurveyModuleActivated(
+        moduleId,
+        instanceId,
+      );
+      if (!isActivated) {
+        throw new NotFoundException({
+          message: 'Survey module is not activated',
+        });
+      }
+
+      const userGroup = await this.SurveyRepo.getUserGroup(userId, instanceId);
+      if (!userGroup) {
+        throw new NotFoundException({
+          message: 'No friends found in this event',
+        });
+      }
+
+      const isGroupActivated = await this.SurveyRepo.isGroupActivated(
+        userGroup.groupid,
+        instanceId,
+      );
+      if (!isGroupActivated) {
+        throw new NotFoundException({
+          message: 'No friends found in this event  ',
+        });
+      }
+
+      const isGroupInSurvey = await this.SurveyRepo.isGroupInSurvey(
+        surveyId,
+        userGroup.groupid,
+        instanceId,
+      );
+      if (!isGroupInSurvey) {
+        throw new NotFoundException({
+          message: 'No friends found in this event ',
+        });
+      }
+
+      const results = await this.SurveyRepo.getUserSurveyResponses(
+        instanceId,
+        surveyId,
+        userId,
+      );
+      if (!results || results.length == 0) {
+        throw new NotFoundException({
+          message: 'Your survey was not found for this event. ',
+        });
+      }
+      return results;
+    } catch (error) {
+      throw new InternalServerErrorException({
+        message: 'An unexpected error occurred. Please try again later.',
+      });
+    }
   }
-  async isgroupinsurvey(surveyId: number, groupId: number, instanceId: number) {
-    const survey = await this.prismaservice.survey.findFirst({
-      where: {
+
+  async addSurveyResponse(
+    userId: number,
+    instanceId: number,
+    moduleId: number,
+    surveyId: number,
+    body: CreateSurveyResponse,
+  ): Promise<any> {
+    const data = body.data;
+
+    const isActivated = await this.SurveyRepo.isSurveyModuleActivated(
+      moduleId,
+      instanceId,
+    );
+    if (!isActivated) {
+      throw new NotFoundException({
+        message: 'Survey module is not activated',
+      });
+    }
+
+    const userGroup = await this.SurveyRepo.getUserGroup(userId, instanceId);
+    if (!userGroup) {
+      throw new NotFoundException({
+        message: 'No friends found in this event',
+      });
+    }
+
+    const isGroupActivated = await this.SurveyRepo.isGroupActivated(
+      userGroup.groupid,
+      instanceId,
+    );
+    if (!isGroupActivated) {
+      throw new NotFoundException({
+        message: 'No friends found in this event  ',
+      });
+    }
+
+    const isGroupInSurvey = await this.SurveyRepo.isGroupInSurvey(
+      surveyId,
+      userGroup.groupid,
+      instanceId,
+    );
+    if (!isGroupInSurvey) {
+      throw new NotFoundException({
+        message: 'No friends found in this event ',
+      });
+    }
+
+    const listSurvayItemId = data.map((item) => item.surveyitemid);
+
+    const checkListAnswer = await this.SurveyRepo.checkDataResponse(
+      surveyId,
+      listSurvayItemId,
+    );
+    if (!checkListAnswer) {
+      throw new NotFoundException({
+        message: 'Some questions in the survey were not found.',
+      });
+    }
+
+    const userCompletedSurvey = await this.SurveyRepo.hasUserCompletedSurvey(
+      userId,
+      surveyId,
+    );
+    if (userCompletedSurvey) {
+      throw new NotFoundException({
+        message: 'You have already taken this survey.',
+      });
+    }
+    const datas = data.map((item) => {
+      return {
         surveyid: surveyId,
         instanceid: instanceId,
-        groupid: groupId,
-        deleted: false,
-        hidden: false,
-      },
+        userid: userId,
+        ...item,
+      };
     });
-    return !!survey;
-  }
-
-  // eslint-disable-next-line prettier/prettier
-  async getdetailsurvey(
-    body: UserdDetailSurvey,
-    surveyid: number,
-    moduleid: number,
-  ): Promise<DetailSurvey> {
-    const instanceId = Number(body.instanceid);
-    const isActivated = await this.isSurveyModuleActivated(
-      moduleid,
-      instanceId,
-    );
-
-    if (!isActivated) {
-      throw new HttpException(
-        { message: 'Survey module is not activated' },
-        HttpStatus.BAD_REQUEST,
-      );
+    const results = await this.SurveyRepo.addSurveyResponse(datas);
+    if (!results) {
+      throw new NotFoundException({
+        message: 'You have failed to add survey.',
+      });
     }
-    const usergroup = await this.getUserGroup(Number(body.userid), instanceId);
-    if (!usergroup) {
-      throw new HttpException(
-        { message: 'You Do Not Have Permission In This Event ' },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    const isGroupActivated = await this.isGroupActivated(
-      usergroup.groupid,
-      instanceId,
-    );
-    if (!isGroupActivated) {
-      throw new HttpException(
-        { message: 'You Do Not Have Permission In This Event ' },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    const isgroupinsurvey = await this.isgroupinsurvey(
-      surveyid,
-      usergroup.groupid,
-      instanceId,
-    );
-    if (!isgroupinsurvey) {
-      throw new HttpException(
-        { message: 'You Do Not Have Permission In This Event ' },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const surveydetail = await this.prismaservice.surveyItem.findMany({
-      where: {
-        surveyid: Number(surveyid),
-        deleted: false,
-        instanceid: instanceId,
-      },
-      select: {
-        questionnum: true,
-        question: true,
-        description: true,
-        choice1: true,
-        choice2: true,
-        choice3: true,
-        choice4: true,
-      },
-    });
-
-    if (!surveydetail.length) {
-      throw new HttpException(
-        { message: 'This Survey Not Found' },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    const result: DetailSurvey = {
-      data: surveydetail,
-      total: surveydetail.length,
+    return {
+      success: true,
+      message: 'You have completed the survey.',
     };
-    return result;
   }
-
-  getsurveys = async (
-    body: UserdDetailSurvey,
-    data: InputSurvey,
-    moduleid: number,
-  ): Promise<ListSurvey> => {
-    const userId = Number(body.userid);
-    const instanceId = Number(body.instanceid);
-    const page = Number(data.page) || 1;
-    const per_page = Number(data.item_per_page) || 12;
-    const skip = page > 1 ? (page - 1) * per_page : 0;
-
-    const isActivated = await this.isSurveyModuleActivated(
-      moduleid,
-      instanceId,
-    );
-
-    if (!isActivated) {
-      throw new HttpException(
-        { message: 'Survey module is not activated' },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const usergroup = await this.getUserGroup(userId, instanceId);
-    if (!usergroup) {
-      throw new HttpException(
-        { message: 'You Do Not Have Permission In This Event ' },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    const isGroupActivated = await this.isGroupActivated(
-      usergroup.groupid,
-      instanceId,
-    );
-    if (!isGroupActivated) {
-      throw new HttpException(
-        { message: 'You Do Not Have Permission In This Event ' },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-
-    const survey = await this.prismaservice.survey.findMany({
-      take: per_page,
-      skip,
-      where: {
-        instanceid: instanceId,
-        groupid: usergroup.groupid,
-        deleted: false,
-        hidden: false,
-      },
-      orderBy: {
-        timestamp_created: 'desc',
-      },
-      select: {
-        surveyName: true,
-        surveyDescription: true,
-        duration: true,
-        type: true,
-        day: true,
-        points: true,
-        timestamp_created: true,
-      },
-    });
-    const total = await this.prismaservice.survey.count({
-      where: {
-        instanceid: instanceId,
-        groupid: usergroup.groupid,
-        deleted: false,
-        hidden: false,
-      },
-    });
-
-    const result: ListSurvey = {
-      total: total,
-      item_per_page: per_page,
-      page: page,
-      list_survey: survey,
-    };
-    return result;
-  };
 }

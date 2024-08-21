@@ -113,17 +113,21 @@ model SurveyItem {
 }
 
 model SurveyResponse {
-  responseid        Int        @id @default(autoincrement())
+  responseid        Int       @id @default(autoincrement())
   surveyid          Int
   instanceid        Int
   userid            Int
   surveyitemid      Int
   answer            String?
-  timestamp_created DateTime   @default(now())
-  survey            Survey     @relation(fields: [surveyid], references: [surveyid])
-  instance          Instance   @relation(fields: [instanceid], references: [instanceid])
-  user              User       @relation(fields: [userid], references: [userid])
-  surveyItem        SurveyItem @relation(fields: [surveyitemid], references: [surveyitemid])
+  delete            Boolean
+  timestamp_created DateTime  @default(now())
+  timestamp_updated DateTime  @updatedAt
+  timestamp_deleted DateTime?
+
+  survey     Survey     @relation(fields: [surveyid], references: [surveyid])
+  instance   Instance   @relation(fields: [instanceid], references: [instanceid])
+  user       User       @relation(fields: [userid], references: [userid])
+  surveyItem SurveyItem @relation(fields: [surveyitemid], references: [surveyitemid])
 }
 
 model SurveyStatus {

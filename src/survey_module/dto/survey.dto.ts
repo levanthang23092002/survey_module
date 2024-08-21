@@ -1,39 +1,39 @@
+import { IsArray, IsNumber, Max } from 'class-validator';
+import { SurveyItemEntity } from '../entities/survey_item.entity';
+import { SurveyEntity } from '../entities/survey.entity';
+
 export class DetailSurvey {
-  data: Question[];
+  @IsArray()
+  data: SurveyItemEntity[];
+  @IsNumber()
   total: number;
 }
 
-export interface Question {
-  questionnum: number;
-  question: string;
-  description: string;
-  choice1: string;
-  choice2: string;
-  choice3: string;
-  choice4: string;
+export class CreateSurveyResponse {
+  @IsArray()
+  data: InputSurveyResponse[];
 }
-export interface UserdDetailSurvey {
-  userid: number;
-  instanceid: number;
+export class InputSurveyResponse {
+  @IsNumber()
+  surveyitemid: number;
+  answer: string;
 }
-
-export interface Survey {
-  surveyName: string;
-  surveyDescription: string;
-  duration: number;
-  type: string;
-  day: Date;
-  points: number;
-  timestamp_created: Date;
-}
-export interface ListSurvey {
-  list_survey: Survey[];
+export class ListSurvey {
+  @IsArray()
+  listSurvey: SurveyEntity[];
+  @IsNumber()
   total: number;
-  item_per_page: number;
+  @IsNumber()
+  @Max(100)
+  itemPerPage: number;
+  @IsNumber()
   page: number;
 }
 
-export interface InputSurvey {
+export class InputSurvey {
+  @IsNumber()
   page?: number;
-  item_per_page?: number;
+  @IsNumber()
+  @Max(50)
+  itemPerPage?: number;
 }
