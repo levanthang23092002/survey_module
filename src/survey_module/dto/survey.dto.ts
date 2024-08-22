@@ -1,5 +1,5 @@
 import { IsArray, IsNumber, Max } from 'class-validator';
-import { SurveyItemEntity } from '../entities/survey_item.entity';
+import { SurveyItemEntity } from '../entities/survey-item.entity';
 import { SurveyEntity } from '../entities/survey.entity';
 
 export class DetailSurvey {
@@ -36,4 +36,17 @@ export class InputSurvey {
   @IsNumber()
   @Max(50)
   itemPerPage?: number;
+}
+
+export class BasicRouteParamsDto {
+  @IsNumber()
+  eventId: number;
+
+  @IsNumber()
+  moduleId: number;
+}
+
+export class SurveyRouteParamsDto extends BasicRouteParamsDto {
+  @IsNumber()
+  surveyId: number;
 }

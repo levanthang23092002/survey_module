@@ -1,59 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { SurveyEntity } from '../entities/survey.entity';
-import { SurveyItemEntity } from '../entities/survey_item.entity';
+import { SurveyItemEntity } from '../entities/survey-item.entity';
 import {
   CreateSurveyResponseEntity,
   SurveyResponseEntity,
-} from '../entities/survey_response';
+} from '../entities/survey-response';
 
 @Injectable()
 export class SurveyModuleRepository {
   constructor(private prisma: PrismaService) {}
 
-  async isSurveyModuleActivated(moduleId: number, instanceId: number) {
-    const module = await this.prisma.module.findFirst({
-      where: {
-        id: moduleId,
-        instanceid: instanceId,
-        deleted: false,
-        activated: true,
-      },
-    });
-    return !!module;
-  }
-  async getUserGroup(userId: number, instanceId: number) {
-    const userGroup = await this.prisma.userGroup.findFirst({
-      where: {
-        userid: userId,
-        instanceid: instanceId,
-        deleted: false,
-      },
-    });
-    return userGroup;
-  }
-  async isGroupActivated(userGroupId: number, instanceId: number) {
-    const objectGroup = await this.prisma.objectGroup.findFirst({
-      where: {
-        groupid: userGroupId,
-        instanceid: instanceId,
-        deleted: false,
-      },
-    });
-    return !!objectGroup; // Trả về true nếu nhóm đã được kích hoạt
-  }
-  async isGroupInSurvey(surveyId: number, groupId: number, instanceId: number) {
-    const survey = await this.prisma.survey.findFirst({
-      where: {
-        surveyid: surveyId,
-        instanceid: instanceId,
-        groupid: groupId,
-        deleted: false,
-        hidden: false,
-      },
-    });
-    return !!survey;
-  }
   async findSurveyItems(
     surveyId: number,
     instanceId: number,
@@ -68,6 +25,7 @@ export class SurveyModuleRepository {
         questionnum: true,
         question: true,
         description: true,
+        image: true,
         choice1: true,
         choice2: true,
         choice3: true,
@@ -78,13 +36,46 @@ export class SurveyModuleRepository {
       questionNum: item.questionnum,
       question: item.question,
       description: item.description,
+      image: item.image,
       choice1: item.choice1,
       choice2: item.choice2,
       choice3: item.choice3,
       choice4: item.choice4,
     }));
   }
+  async checkDataResponse(
+    surveyId: number,
+    surveyItemId: number[],
+  ): Promise<boolean> {
+    const surveyItems = await this.prisma.surveyItem.findMany({
+      where: {
+        surveyid: surveyId,
+      },
+      select: {
+        surveyitemid: true,
+      },
+    });
+    const surveyItemsid = surveyItems.map((item) => item.surveyitemid);
+    const check = surveyItemId.every((id) => surveyItemsid.includes(id));
 
+    return check;
+  }
+  async hasUserCompletedSurvey(
+    userId: number,
+    surveyId: number,
+  ): Promise<boolean> {
+    const surveyItems = await this.prisma.surveyResponse.findMany({
+      where: {
+        surveyid: surveyId,
+        userid: userId,
+      },
+    });
+    if (surveyItems.length == 0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
   async findListSurvey(
     instanceId: number,
     userGroup: number,
@@ -148,11 +139,11 @@ export class SurveyModuleRepository {
         userid: userId,
         surveyid: surveyId,
         instanceid: instanceid,
-        delete: false, // Giả sử bạn muốn lọc những câu trả lời chưa bị xóa
+        delete: false,
       },
       orderBy: {
         surveyItem: {
-          questionnum: 'asc', // Sắp xếp theo số câu hỏi theo thứ tự giảm dần
+          questionnum: 'asc',
         },
       },
       select: {
@@ -168,7 +159,6 @@ export class SurveyModuleRepository {
       },
     });
 
-    // Map lại kết quả để trả về dưới dạng mảng các đối tượng
     return responses.map((response) => ({
       questionnum: response.surveyItem.questionnum,
       question: response.surveyItem.question,
@@ -197,39 +187,6 @@ export class SurveyModuleRepository {
       }
     } catch (error) {
       return false;
-    }
-  }
-  async checkDataResponse(
-    surveyId: number,
-    surveyItemId: number[],
-  ): Promise<boolean> {
-    const surveyItems = await this.prisma.surveyItem.findMany({
-      where: {
-        surveyid: surveyId,
-      },
-      select: {
-        surveyitemid: true,
-      },
-    });
-    const surveyItemsid = surveyItems.map((item) => item.surveyitemid);
-    const check = surveyItemId.every((id) => surveyItemsid.includes(id));
-
-    return check;
-  }
-  async hasUserCompletedSurvey(
-    userId: number,
-    surveyId: number,
-  ): Promise<boolean> {
-    const surveyItems = await this.prisma.surveyResponse.findMany({
-      where: {
-        surveyid: surveyId,
-        userid: userId,
-      },
-    });
-    if (surveyItems.length == 0) {
-      return false;
-    } else {
-      return true;
     }
   }
 }
