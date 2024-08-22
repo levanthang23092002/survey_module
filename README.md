@@ -65,9 +65,10 @@ These additions enhance the flexibility and scalability of the system, allowing 
 3.  **Configure Environment**
 
     Create a .env file and configure the necessary environment variables:
-    PORT = 3000
-    DATABASE_URL = mysql://username:password@localhost:5432/mydatabase
-    Access_Token_Key = example
+    ##### Variables:
+        PORT = 3000
+        DATABASE_URL = mysql://username:password@localhost:5432/mydatabase
+        Access_Token_Key = example
 
 4.  **Set Up Database**
 
