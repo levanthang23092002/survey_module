@@ -1,6 +1,9 @@
 import { IsArray, IsNumber, Max } from 'class-validator';
 import { SurveyItemEntity } from '../entities/survey-item.entity';
 import { SurveyEntity } from '../entities/survey.entity';
+import { SurveyResponseEntity } from '../entities/survey-response';
+
+import { ApiProperty } from '@nestjs/swagger';
 
 export class DetailSurvey {
   @IsArray()
@@ -15,8 +18,17 @@ export class CreateSurveyResponse {
 }
 export class InputSurveyResponse {
   @IsNumber()
-  surveyitemid: number;
+  surveyItemId: number;
   answer: string;
+}
+
+export class ListResultAnswer {
+  total: number;
+  listSurvey: ListResultUserAnswer[];
+}
+export class ListResultUserAnswer {
+  userId: number;
+  responses: SurveyResponseEntity[];
 }
 export class ListSurvey {
   @IsArray()
@@ -39,14 +51,40 @@ export class InputSurvey {
 }
 
 export class BasicRouteParamsDto {
+  @ApiProperty({
+    example: 12345,
+  })
   @IsNumber()
   eventId: number;
 
+  @ApiProperty({
+    example: 12345,
+  })
   @IsNumber()
   moduleId: number;
 }
 
 export class SurveyRouteParamsDto extends BasicRouteParamsDto {
+  @ApiProperty({
+    example: 12345,
+  })
   @IsNumber()
   surveyId: number;
+}
+
+export class ErrorResponseDto {
+  status: string;
+  message: string;
+  errorCode?: string;
+}
+
+export class SuccessResponseDto {
+  @ApiProperty({ description: 'Status of the response' })
+  status: string;
+
+  @ApiProperty({ description: 'Message associated with the response' })
+  message: string;
+
+  @ApiProperty({ description: 'Data payload of the response' })
+  data: any;
 }

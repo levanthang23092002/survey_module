@@ -7,6 +7,7 @@ import {
   InputSurvey,
   ListSurvey,
   BasicRouteParamsDto,
+  SuccessResponseDto,
 } from './dto/survey.dto';
 import { ModuleActivationService } from 'src/module-activation/module-activation.service';
 import { GroupsService } from 'src/groups/groups.service';
@@ -22,7 +23,7 @@ export class SurveyModuleService {
   async getDetailSurvey(
     userId: number,
     params: SurveyRouteParamsDto,
-  ): Promise<DetailSurvey> {
+  ): Promise<SuccessResponseDto> {
     const instanceId = Number(params.eventId);
     const moduleId = Number(params.moduleId);
     const surveyId = Number(params.surveyId);
@@ -72,14 +73,18 @@ export class SurveyModuleService {
       total: surveyDetail.length,
       data: surveyDetail,
     };
-    return result;
+    return {
+      status: 'success',
+      message: 'Survey details retrieved successfully',
+      data: result,
+    };
   }
 
   async getSurveys(
     userId: number,
     params: BasicRouteParamsDto,
     data: InputSurvey,
-  ): Promise<ListSurvey> {
+  ): Promise<SuccessResponseDto> {
     const page = Number(data.page) || 1;
     const perPage = Number(data.itemPerPage) || 12;
     const skip = page > 1 ? (page - 1) * perPage : 0;
@@ -111,7 +116,12 @@ export class SurveyModuleService {
         page: page,
         listSurvey: listSurvey,
       };
-      return result;
+
+      return {
+        status: 'success',
+        message: 'Survey details retrieved successfully',
+        data: result,
+      };
     }
 
     const userGroup = await this.groupService.getUserGroup(userId, instanceId);
@@ -148,13 +158,17 @@ export class SurveyModuleService {
       listSurvey: listSurvey,
     };
 
-    return result;
+    return {
+      status: 'success',
+      message: 'Survey details retrieved successfully',
+      data: result,
+    };
   }
 
   async getSurveyResponse(
     userId: number,
     params: SurveyRouteParamsDto,
-  ): Promise<any> {
+  ): Promise<SuccessResponseDto> {
     const instanceId = Number(params.eventId);
     const moduleId = Number(params.moduleId);
     const surveyId = Number(params.surveyId);
@@ -179,7 +193,11 @@ export class SurveyModuleService {
         total: listSurvey.length,
         listSurvey: listSurvey,
       };
-      return result;
+      return {
+        status: 'success',
+        message: 'Survey details retrieved successfully',
+        data: result,
+      };
     }
 
     const userGroup = await this.groupService.getUserGroup(userId, instanceId);
@@ -210,24 +228,37 @@ export class SurveyModuleService {
       });
     }
 
-    const results = await this.SurveyRepo.getUserSurveyResponses(
+    const result = await this.SurveyRepo.getUserSurveyResponses(
       instanceId,
       surveyId,
       userId,
     );
-    if (!results || results.length == 0) {
+    if (!result || result.length == 0) {
       throw new NotFoundException({
         message: 'Not Found',
       });
     }
-    return results;
+    const results = {
+      total: 1,
+      listSurvey: [
+        {
+          userId: userId,
+          responses: result,
+        },
+      ],
+    };
+    return {
+      status: 'success',
+      message: 'Survey details retrieved successfully',
+      data: results,
+    };
   }
 
   async addSurveyResponse(
     userId: number,
     params: SurveyRouteParamsDto,
     body: CreateSurveyResponse,
-  ): Promise<any> {
+  ): Promise<SuccessResponseDto> {
     const instanceId = Number(params.eventId);
     const moduleId = Number(params.moduleId);
     const surveyId = Number(params.surveyId);
@@ -271,7 +302,7 @@ export class SurveyModuleService {
       });
     }
 
-    const listSurvayItemId = data.map((item) => item.surveyitemid);
+    const listSurvayItemId = data.map((item) => item.surveyItemId);
 
     const checkListAnswer = await this.SurveyRepo.checkDataResponse(
       surveyId,
@@ -297,6 +328,7 @@ export class SurveyModuleService {
         surveyid: surveyId,
         instanceid: instanceId,
         userid: userId,
+        surveyitemid: item.surveyItemId,
         ...item,
       };
     });
@@ -307,8 +339,9 @@ export class SurveyModuleService {
       });
     }
     return {
-      success: true,
-      message: 'You have completed the survey.',
+      status: 'success',
+      message: 'Survey details retrieved successfully',
+      data: data,
     };
   }
 }

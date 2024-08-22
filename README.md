@@ -65,7 +65,9 @@ These additions enhance the flexibility and scalability of the system, allowing 
 3.  **Configure Environment**
 
     Create a .env file and configure the necessary environment variables:
+
     ##### Variables:
+
         PORT = 3000
         DATABASE_URL = mysql://username:password@localhost:5432/mydatabase
         Access_Token_Key = example
@@ -463,38 +465,46 @@ These additions enhance the flexibility and scalability of the system, allowing 
 ## API Documentation: User Login
 
 ### Endpoint
+
 - **URL:** `/auth/login`
 - **Method:** `POST`
 
 ### Headers
+
 - `Content-Type: application/json`
 - `Authorization: Basic d2ViX2FwcDpjaGFuZ2VpdA==`
 
 ### Data Parameters
+
 - **Content:**
+
 ```json
 {
-"email": "<email>",
-"passWord": "<password>"
+  "email": "<email>",
+  "passWord": "<password>"
 }
 ```
+
 - `email`: The email address of the user trying to log in.
 
 - `passWord`: The password of the user.
 
 ### Response successful
+
 - **Code:** 200 OK
 - **Content:**
+
 ```json
 {
 "accesstoken": "accesstoken_JwT",
 "payload": {
-"userId": <userId>,
-"name": "<firstName> <lastName>",
-"email": "<email>"
+    "userId": <userId>,
+    "name": "<firstName> <lastName>",
+    "email": "<email>"
 }
 }
 ```
+
 - `accesstoken`: JWT or other token used for authenticated requests.
 
 - `payload`: Contains user information:
@@ -506,25 +516,29 @@ These additions enhance the flexibility and scalability of the system, allowing 
 - `email`: Email address of the user.
 
 ### Error Response
+
 - **Code:** 404 Not Found
 - **Message:**
+
 ```json
 {
-"error": "User not found or invalid credentials."
-
+  "error": "User not found or invalid credentials."
 }
 ```
 
 ### Sample Call
+
 - **Request Body:**
+
 ```json
 {
-"email": "john.doe@example.com",
-"passWord": "password123"
+  "email": "john.doe@example.com",
+  "passWord": "password123"
 }
 ```
 
 ### Notes
+
 - **Authentication:**
 - Ensure that the provided authentication information is correct and matches an existing user in the system.
 - The `Authorization` header must include the appropriate authentication information, but is generally not required for this endpoint unless used for special purposes.
@@ -543,5 +557,6 @@ These additions enhance the flexibility and scalability of the system, allowing 
 - Ensure proper handling and storage of tokens to maintain security and user sessions.
 
 ## Documentation
+
 [NestJS Documentation](https://docs.nestjs.com/)
 [Prisma Documentation](https://www.prisma.io/docs)
