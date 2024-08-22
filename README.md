@@ -41,6 +41,10 @@ This project is a backend application built using [NestJS](https://nestjs.com/),
 
     DATABASE_URL = mysql://username:password@localhost:5432/mydatabase
 
+    # Access Token
+
+    Access_Token_Key = example
+
 4.  **Set Up Database**
 
     use command to create database:

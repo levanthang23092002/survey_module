@@ -1,11 +1,4 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { SurveyModuleRepository } from './repository/survey-module.repository';
 import {
   CreateSurveyResponse,
@@ -15,7 +8,6 @@ import {
   ListSurvey,
   BasicRouteParamsDto,
 } from './dto/survey.dto';
-import { SurveyResponseEntity } from './entities/survey-response';
 import { ModuleActivationService } from 'src/module-activation/module-activation.service';
 import { GroupsService } from 'src/groups/groups.service';
 
@@ -43,13 +35,13 @@ export class SurveyModuleService {
 
     if (!isActivated) {
       throw new NotFoundException({
-        message: 'Survey module is not activated',
+        message: 'Not Found',
       });
     }
     const userGroup = await this.groupService.getUserGroup(userId, instanceId);
     if (!userGroup) {
       throw new NotFoundException({
-        message: 'No friends found in this event',
+        message: 'Not Found',
       });
     }
     const isGroupActivated = await this.groupService.isGroupActivated(
@@ -58,7 +50,7 @@ export class SurveyModuleService {
     );
     if (!isGroupActivated) {
       throw new NotFoundException({
-        message: 'No friends found in this event  ',
+        message: 'Not Found',
       });
     }
     const isGroupInSurvey = await this.groupService.isGroupInSurvey(
@@ -68,7 +60,7 @@ export class SurveyModuleService {
     );
     if (!isGroupInSurvey) {
       throw new NotFoundException({
-        message: 'No friends found in this event  ',
+        message: 'Not Found',
       });
     }
 
@@ -77,8 +69,8 @@ export class SurveyModuleService {
       instanceId,
     );
     const result: DetailSurvey = {
-      data: surveyDetail,
       total: surveyDetail.length,
+      data: surveyDetail,
     };
     return result;
   }
@@ -101,18 +93,30 @@ export class SurveyModuleService {
       );
 
     if (!isActivated) {
-      throw new HttpException(
-        { message: 'Survey module is not activated' },
-        HttpStatus.BAD_REQUEST,
+      throw new NotFoundException({ message: 'Not Found' });
+    }
+    const checkAdmin = await this.SurveyRepo.checkAdmin(userId, instanceId);
+    if (checkAdmin) {
+      const listSurvey = await this.SurveyRepo.findListSurveyByAdmin(
+        instanceId,
+        perPage,
+        skip,
       );
+      const total =
+        await this.SurveyRepo.counttotalListSurveyByAmin(instanceId);
+
+      const result: ListSurvey = {
+        total: total,
+        itemPerPage: perPage,
+        page: page,
+        listSurvey: listSurvey,
+      };
+      return result;
     }
 
     const userGroup = await this.groupService.getUserGroup(userId, instanceId);
     if (!userGroup) {
-      throw new HttpException(
-        { message: 'You Do Not Have Permission In This Event ' },
-        HttpStatus.UNAUTHORIZED,
-      );
+      throw new NotFoundException({ message: 'Not Found' });
     }
 
     const isGroupActivated = await this.groupService.isGroupActivated(
@@ -121,8 +125,8 @@ export class SurveyModuleService {
     );
 
     if (!isGroupActivated) {
-      throw new UnauthorizedException({
-        message: 'You Do Not Have Permission In This Event ',
+      throw new NotFoundException({
+        message: 'Not Found',
       });
     }
 
@@ -150,7 +154,7 @@ export class SurveyModuleService {
   async getSurveyResponse(
     userId: number,
     params: SurveyRouteParamsDto,
-  ): Promise<SurveyResponseEntity[]> {
+  ): Promise<any> {
     const instanceId = Number(params.eventId);
     const moduleId = Number(params.moduleId);
     const surveyId = Number(params.surveyId);
@@ -161,8 +165,21 @@ export class SurveyModuleService {
       );
     if (!isActivated) {
       throw new NotFoundException({
-        message: 'Survey module is not activated',
+        message: 'Not Found',
       });
+    }
+    const checkAdmin = await this.SurveyRepo.checkAdmin(userId, instanceId);
+    if (checkAdmin) {
+      const listSurvey = await this.SurveyRepo.getUserSurveyResponsesByAdmin(
+        instanceId,
+        surveyId,
+      );
+
+      const result = {
+        total: listSurvey.length,
+        listSurvey: listSurvey,
+      };
+      return result;
     }
 
     const userGroup = await this.groupService.getUserGroup(userId, instanceId);
@@ -222,14 +239,14 @@ export class SurveyModuleService {
       );
     if (!isActivated) {
       throw new NotFoundException({
-        message: 'Survey module is not activated',
+        message: 'Not Found',
       });
     }
 
     const userGroup = await this.groupService.getUserGroup(userId, instanceId);
     if (!userGroup) {
       throw new NotFoundException({
-        message: 'No friends found in this event',
+        message: 'Not Found',
       });
     }
 
@@ -239,7 +256,7 @@ export class SurveyModuleService {
     );
     if (!isGroupActivated) {
       throw new NotFoundException({
-        message: 'No friends found in this event  ',
+        message: 'Not Found',
       });
     }
 
@@ -250,7 +267,7 @@ export class SurveyModuleService {
     );
     if (!isGroupInSurvey) {
       throw new NotFoundException({
-        message: 'No friends found in this event ',
+        message: 'Not Found',
       });
     }
 
@@ -262,7 +279,7 @@ export class SurveyModuleService {
     );
     if (!checkListAnswer) {
       throw new NotFoundException({
-        message: 'Some questions in the survey were not found.',
+        message: 'Not Found',
       });
     }
 
@@ -272,7 +289,7 @@ export class SurveyModuleService {
     );
     if (userCompletedSurvey) {
       throw new NotFoundException({
-        message: 'You have already taken this survey.',
+        message: 'Not Found',
       });
     }
     const datas = data.map((item) => {
@@ -286,7 +303,7 @@ export class SurveyModuleService {
     const results = await this.SurveyRepo.addSurveyResponse(datas);
     if (!results) {
       throw new NotFoundException({
-        message: 'You have failed to add survey.',
+        message: 'Not Found',
       });
     }
     return {
