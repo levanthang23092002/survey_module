@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma.service';
 import { SurveyEntity } from '../entities/survey.entity';
 import { SurveyItemEntity } from '../entities/survey-item.entity';
-import { Group } from '../../groups/entities/group.entity';
 import {
   CreateSurveyResponseEntity,
   SurveyResponseEntity,

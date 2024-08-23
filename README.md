@@ -92,86 +92,6 @@ These additions enhance the flexibility and scalability of the system, allowing 
 
 # API Documentation
 
-## API Documentation: Get All Surveys for a Particular Event with Pagination
-
-### Endpoint
-
-- **URL:** `event/<eventId>/module/<moduleId>/surveys`
-- **Method:** `GET`
-- **URL Params:**
-  - `<eventId>`: The unique identifier of the event (corresponds to `instanceid` in the database).
-  - `<moduleId>`: The unique identifier of the module.
-- **Query Params:**
-  - `<page>`: The page number to retrieve.
-  - `<itemPerPage>`: The number of items per page.
-- **Headers:**
-  - `Content-Type: application/json`
-  - `Authorization: Basic d2ViX2FwcDpjaGFuZ2VpdA==`
-
-### Data Params
-
-- None
-
-### Success Response
-
-- **Code:** 200 OK
-- **Content:**
-  ```json
-  {
-    "total": 2,
-    "itemPerPage": 12,
-    "page": 1,
-    "listSurvey": [
-      {
-        "surveyName": "Survey 1",
-        "surveyDescription": "Description of Survey 1",
-        "duration": 30,
-        "type": "multiple-choice",
-        "day": "2024-08-20T00:00:00.000Z",
-        "points": 100,
-        "timestampCreated": "2024-08-20T11:19:39.000Z"
-      },
-      {
-        "surveyName": "Survey 2",
-        "surveyDescription": "Description of Survey 2",
-        "duration": 50,
-        "type": "multiple-choice",
-        "day": "2024-08-20T00:00:00.000Z",
-        "points": 200,
-        "timestampCreated": "2024-08-20T11:19:39.000Z"
-      }
-    ]
-  }
-  ```
-
-### Error Response
-
-- **Code:** 404 Not Found
-
-### Sample Call
-
-- **URL:** `event/1/module/1/surveys`
-
-### Notes
-
-- **Access Control:**
-
-  - **User:** Regular users will only see surveys within the event (`instanceid`) that they have permission to view. Their access is restricted based on their role and permissions.
-  - **Admin:** Admin users, identified by the `adminid` in the `Instance` model, will have access to all surveys within the event.
-
-- **Mapping:**
-  - The parameter `eventId` in the URL maps to the `instanceid` in the `Instance` model. This is used to identify the event for which surveys are being retrieved.
-
-### Logic for Access Control
-
-1. **User Role:**
-
-   - When a user accesses the endpoint, the system checks the user’s role and associated permissions.
-   - Only surveys within the event that the user is allowed to view are returned in the response.
-
-2. **Admin Role:**
-   - If the user is an admin of the event, they will see all surveys related to the event, without any restrictions.
-
 ## API Documentation: Get Survey Results By ID
 
 ### Endpoint
@@ -198,35 +118,27 @@ These additions enhance the flexibility and scalability of the system, allowing 
 - **Content:**
   ```json
   {
-    "total": 1,
-    "listSurvey": [
-      {
-        "userId": 1,
-        "responses": [
-          {
-            "questionnum": 1,
-            "question": "Question 1 for Survey 1",
-            "description": null,
-            "image": null,
-            "answer": "option 1"
-          },
-          {
-            "questionnum": 2,
-            "question": "Question 2 for Survey 1",
-            "description": null,
-            "image": null,
-            "answer": "option 1"
-          },
-          {
-            "questionnum": 3,
-            "question": "Question 3 for Survey 1",
-            "description": null,
-            "image": null,
-            "answer": "option 1"
-          }
-        ]
-      }
-    ]
+    "status": "success",
+    "message": "Survey details retrieved successfully",
+    "data": {
+      "total": <total>,
+      "listSurvey": [
+        {
+          "userId": <User Id>,
+          "responses": [
+            {
+              "questionnum": <question number>,
+              "question": <question>,
+              "description": <question description>,
+              "image": <image>,
+              "answer": <answer>
+            },
+            ...
+          ]
+        },
+        ...
+      ]
+    }
   }
   ```
 
@@ -266,6 +178,82 @@ These additions enhance the flexibility and scalability of the system, allowing 
 3. **Response Format:**
    - The API returns the results in a structured format, showing the question number, the question text, any description or image associated with the question, and the answer provided by the user.
 
+## API Documentation: Get All Surveys for a Particular Event with Pagination
+
+### Endpoint
+
+- **URL:** `event/<eventId>/module/<moduleId>/surveys`
+- **Method:** `GET`
+- **URL Params:**
+  - `<eventId>`: The unique identifier of the event (corresponds to `instanceid` in the database).
+  - `<moduleId>`: The unique identifier of the module.
+- **Query Params:**
+  - `<page>`: The page number to retrieve.
+  - `<itemPerPage>`: The number of items per page.
+- **Headers:**
+  - `Content-Type: application/json`
+  - `Authorization: Basic d2ViX2FwcDpjaGFuZ2VpdA==`
+
+### Data Params
+
+- None
+
+### Success Response
+
+- **Code:** 200 OK
+- **Content:**
+  ```json
+  {
+    "status": "success",
+    "message": "Survey details retrieved successfully",
+    "data": {
+      "total": <total>,
+      "itemPerPage": <PerPage>,
+      "page": <nuber page>,
+      "listSurvey": [
+        {
+          "surveyName": <surveyName>,
+          "surveyDescription": <surveyDescription>,
+          "duration": <duration>,
+          "type": <type>,
+          "day": <day start>,
+          "points": <point>,
+          "timestampCreated": <create day>
+        },
+        ... 
+      ]
+    }
+  }
+  ```
+
+### Error Response
+
+- **Code:** 404 Not Found
+
+### Sample Call
+
+- **URL:** `event/1/module/1/surveys`
+
+### Notes
+
+- **Access Control:**
+
+  - **User:** Regular users will only see surveys within the event (`instanceid`) that they have permission to view. Their access is restricted based on their role and permissions.
+  - **Admin:** Admin users, identified by the `adminid` in the `Instance` model, will have access to all surveys within the event.
+
+- **Mapping:**
+  - The parameter `eventId` in the URL maps to the `instanceid` in the `Instance` model. This is used to identify the event for which surveys are being retrieved.
+
+### Logic for Access Control
+
+1. **User Role:**
+
+   - When a user accesses the endpoint, the system checks the user’s role and associated permissions.
+   - Only surveys within the event that the user is allowed to view are returned in the response.
+
+2. **Admin Role:**
+   - If the user is an admin of the event, they will see all surveys related to the event, without any restrictions.
+
 ## API Documentation: Get All Survey Items
 
 ### Endpoint
@@ -292,39 +280,30 @@ These additions enhance the flexibility and scalability of the system, allowing 
 - **Content:**
   ```json
   {
-    "total": 3,
-    "data": [
-      {
-        "questionNum": 1,
-        "question": "Question 1 for Survey 1",
-        "description": null,
-        "image": null,
-        "choice1": "Choice 1",
-        "choice2": "Choice 2",
-        "choice3": "Choice 3",
-        "choice4": "Choice 4"
-      },
-      {
-        "questionNum": 2,
-        "question": "Question 2 for Survey 1",
-        "description": null,
-        "image": null,
-        "choice1": "Choice 1",
-        "choice2": "Choice 2",
-        "choice3": "Choice 3",
-        "choice4": "Choice 4"
-      },
-      {
-        "questionNum": 3,
-        "question": "Question 3 for Survey 1",
-        "description": null,
-        "image": null,
-        "choice1": "Choice 1",
-        "choice2": "Choice 2",
-        "choice3": "Choice 3",
-        "choice4": "Choice 4"
-      }
-    ]
+    "status": "success",
+    "message": "Survey details retrieved successfully",
+    "data": {
+      "total": <total>,
+      "data": [
+        {
+          "questionNum": <questionNum>,
+          "question": <question>,
+          "description": <description>,
+          "image": <image>,
+          "choice1": <choice 1>,
+          "choice2": <choice 2>,
+          "choice3": <choice 3>,
+          "choice4": <choice 4>,
+          "type": <type>,
+          "required": true || false,
+          "showDescription": true || false,
+          "shuffleChoice": true || false,
+          "hasCommentField": true || false,
+          "subQuestions": []
+        },
+        .....
+      ]
+    }
   }
   ```
 
@@ -410,8 +389,15 @@ These additions enhance the flexibility and scalability of the system, allowing 
 - **Content:**
   ```json
   {
-    "success": true,
-    "message": "You have completed the survey."
+    "status": "success",
+    "message": "Survey details retrieved successfully",
+    "data": [
+      {
+        "surveyItemId": <surveyItemId>,
+        "answer": <answer>
+      },
+      ...
+    ]
   }
   ```
 
