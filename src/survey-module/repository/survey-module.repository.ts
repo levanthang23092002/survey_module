@@ -16,7 +16,7 @@ export class SurveyModuleRepository {
     surveyId: number,
     instanceId: number,
   ): Promise<SurveyItemEntity[]> {
-    const question = await this.prisma.surveyItem.findMany({
+    const surveyItems = await this.prisma.surveyItem.findMany({
       where: {
         surveyid: surveyId,
         deleted: false,
@@ -31,19 +31,59 @@ export class SurveyModuleRepository {
         choice2: true,
         choice3: true,
         choice4: true,
+        subquestion: true,
+        subnum: true,
+        type: true,
+        required: true,
+        showDescription: true,
+        shuffleChoice: true,
+        hasCommentField: true,
       },
     });
-    return question.map((item) => ({
-      questionNum: item.questionnum,
-      question: item.question,
-      description: item.description,
-      image: item.image,
-      choice1: item.choice1,
-      choice2: item.choice2,
-      choice3: item.choice3,
-      choice4: item.choice4,
-    }));
+
+    const groupedQuestions = surveyItems.reduce((acc, item) => {
+      const mainQuestion = acc.find((q) => q.questionNum === item.questionnum);
+
+      if (mainQuestion) {
+        if (!mainQuestion.subQuestions) {
+          mainQuestion.subQuestions = [];
+        }
+        mainQuestion.subQuestions.push({
+          subQuestion: item.subquestion,
+          subNum: item.subnum,
+        });
+      } else {
+        acc.push({
+          questionNum: item.questionnum,
+          question: item.question,
+          description: item.description,
+          image: item.image,
+          choice1: item.choice1,
+          choice2: item.choice2,
+          choice3: item.choice3,
+          choice4: item.choice4,
+          type: item.type,
+          required: item.required,
+          showDescription: item.showDescription,
+          shuffleChoice: item.shuffleChoice,
+          hasCommentField: item.hasCommentField,
+          subQuestions: item.subquestion
+            ? [
+                {
+                  subQuestion: item.subquestion,
+                  subNum: item.subnum,
+                },
+              ]
+            : [],
+        });
+      }
+
+      return acc;
+    }, []);
+
+    return groupedQuestions;
   }
+
   async checkDataResponse(
     surveyId: number,
     surveyItemId: number[],
