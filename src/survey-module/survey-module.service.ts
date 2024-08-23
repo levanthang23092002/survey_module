@@ -39,6 +39,22 @@ export class SurveyModuleService {
         message: 'Not Found',
       });
     }
+    const checkAdmin = await this.SurveyRepo.checkAdmin(userId, instanceId);
+    if (checkAdmin) {
+      const surveyDetail = await this.SurveyRepo.findSurveyItems(
+        surveyId,
+        instanceId,
+      );
+      const result: DetailSurvey = {
+        total: surveyDetail.length,
+        data: surveyDetail,
+      };
+      return {
+        status: 'success',
+        message: 'Survey details retrieved successfully',
+        data: result,
+      };
+    }
     const userGroup = await this.groupService.getUserGroup(userId, instanceId);
     if (!userGroup) {
       throw new NotFoundException({
