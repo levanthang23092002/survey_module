@@ -4,39 +4,6 @@
 
 This project is a backend application built using [NestJS](https://nestjs.com/), a framework for building efficient, scalable Node.js server-side applications. NestJS leverages TypeScript and provides a modular architecture for easy maintenance and extension.
 
-## Database Schema
-
-### 1. User Table
-
-- **Purpose:**
-  - This table is used to manage user authentication and authorization. It stores the login credentials of users, which allows the system to differentiate between various users and grant appropriate access permissions based on their roles.
-- **Usage:**
-  - The `user` table is critical for user management and ensuring secure access to the system. It supports login functionality and role-based access control, ensuring that only authorized users can access certain features of the application.
-
-### 2. Instance Table
-
-- **Purpose:**
-  - The `instance` table is used to manage specific events or instances within the system. It also tracks who the admin of each event is, thus controlling management rights and event-related activities.
-- **Usage:**
-  - This table helps in organizing and managing different events or sessions. It ensures that each instance has a designated admin, who has the authority to manage the event, assign tasks, and monitor progress.
-
-### 3. Response Table
-
-- **Purpose:**
-  - The `response` table is designed to store the answers provided by users in surveys. It enables the system to collect, store, and analyze the feedback received from users.
-- **Usage:**
-  - The `response` table plays a crucial role in survey management. By storing user responses, it allows for detailed analysis and reporting on the collected data, helping in making informed decisions based on survey results.
-
-## Justification for Additional Tables
-
-To extend the initial request functionality, the following tables were added:
-
-- **User Table**: To enable user login and manage authentication.
-- **Instance Table**: To define and manage events, including admin assignments.
-- **Response Table**: To capture and analyze survey responses effectively.
-
-These additions enhance the flexibility and scalability of the system, allowing it to handle more complex scenarios, such as event management and survey analysis.
-
 ## Installation
 
 ### Prerequisites
@@ -89,6 +56,112 @@ These additions enhance the flexibility and scalability of the system, allowing 
 
         yarn start:dev
         yarn start
+
+## Database Schema
+
+### 1. User Table
+
+- **Purpose:**
+  - This table is used to manage user authentication and authorization. It stores the login credentials of users, which allows the system to differentiate between various users and grant appropriate access permissions based on their roles.
+- **Usage:**
+  - The `user` table is critical for user management and ensuring secure access to the system. It supports login functionality and role-based access control, ensuring that only authorized users can access certain features of the application.
+
+### 2. Instance Table
+
+- **Purpose:**
+  - The `instance` table is used to manage specific events or instances within the system. It also tracks who the admin of each event is, thus controlling management rights and event-related activities.
+- **Usage:**
+  - This table helps in organizing and managing different events or sessions. It ensures that each instance has a designated admin, who has the authority to manage the event, assign tasks, and monitor progress.
+
+### 3. Response Table
+
+- **Purpose:**
+  - The `response` table is designed to store the answers provided by users in surveys. It enables the system to collect, store, and analyze the feedback received from users.
+- **Usage:**
+  - The `response` table plays a crucial role in survey management. By storing user responses, it allows for detailed analysis and reporting on the collected data, helping in making informed decisions based on survey results.
+
+### Justification for Additional Tables
+
+To extend the initial request functionality, the following tables were added:
+
+- **User Table**: To enable user login and manage authentication.
+- **Instance Table**: To define and manage events, including admin assignments.
+- **Response Table**: To capture and analyze survey responses effectively.
+
+These additions enhance the flexibility and scalability of the system, allowing it to handle more complex scenarios, such as event management and survey analysis.
+
+### Database Setup
+
+#### Insert Users
+
+INSERT INTO user (username, email, password, firstName, lastName, role, createdAt, updatedAt)
+VALUES
+('john_doe', 'john.doe@example.com', 'password123', 'John', 'Doe', 'user', NOW(), NOW()),
+('jane_smith', 'jane.smith@example.com', 'password123', 'Jane', 'Smith', 'user', NOW(), NOW()),
+('bob_jones', 'bob.jones@example.com', 'password123', 'Bob', 'Jones', 'user', NOW(), NOW()),
+('alice_williams', 'alice.williams@example.com', 'password123', 'Alice', 'Williams', 'user', NOW(), NOW());
+
+#### Insert an Instance (Event)
+
+INSERT INTO instance (instanceName, instanceDescription, adminid, startDate, endDate, createdAt, updatedAt)
+VALUES ('Event 1', 'Description of Event 1', 1, '2024-08-20 00:00:00', '2024-08-30 23:59:59', NOW(), NOW());
+
+#### Insert Modules into the Instance
+
+INSERT INTO module (instanceid, moduleid, modulename, isDuplicated, displayOrder, activated, featured, options, iconid, iconColor, deleted, timestamp_created, timestamp_updated)
+VALUES (1, 1, 'Module 1', false, 1, true, true, '{"setting": "value"}', null, 'blue', false, NOW(), NOW());
+
+#### Insert Surveys
+
+INSERT INTO survey (surveyname, surveydescription, thankyoumessage, displayinonepage, duration, password, showcorrectanswer, type, day, instanceid, points, groupid, hidden, timestamp_created, timestamp_updated)
+VALUES
+('Survey 1 - Group 1', 'Survey 1 for Group 1', 'Thanks for completing Survey 1!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1,50,1, false, NOW(), NOW()),
+('Survey 2 - Group 1', 'Survey 2 for Group 1', 'Thanks for completing Survey 2!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,1, false, NOW(), NOW());
+('Survey 1 - Group 2', 'Survey 1 for Group 2', 'Thanks for completing Survey 1!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,2, false, NOW(), NOW()),
+('Survey 2 - Group 2', 'Survey 2 for Group 2', 'Thanks for completing Survey 2!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,2, false, NOW(), NOW()),
+('Survey 3 - Group 2', 'Survey 3 for Group 2', 'Thanks for completing Survey 3!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1,50,2, false, NOW(), NOW());
+
+#### Insert Survey Items for Surveys
+
+INSERT INTO surveyitem (surveyid, instanceid, question, questionnum, type, required, choice1, choice2, choice3, choice4, deleted, showDescription, shuffleChoice, hasCommentField, timestamp_updated)
+VALUES
+(1, 1, 'Question 1 for Survey 1 - Group 1', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(1, 1, 'Question 2 for Survey 1 - Group 1', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(1, 1, 'Question 3 for Survey 1 - Group 1', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(1, 1, 'Question 4 for Survey 1 - Group 1', 4, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(1, 1, 'Question 5 for Survey 1 - Group 1', 5, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(2, 1, 'Question 1 for Survey 2 - Group 1', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(2, 1, 'Question 2 for Survey 2 - Group 1', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(2, 1, 'Question 3 for Survey 2 - Group 1', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(2, 1, 'Question 4 for Survey 2 - Group 1', 4, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(2, 1, 'Question 5 for Survey 2 - Group 1', 5, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW());
+(3, 1, 'Question 1 for Survey 1 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(3, 1, 'Question 2 for Survey 1 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(3, 1, 'Question 3 for Survey 1 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(4, 1, 'Question 1 for Survey 2 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(4, 1, 'Question 2 for Survey 2 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(4, 1, 'Question 3 for Survey 2 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(5, 1, 'Question 1 for Survey 3 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(5, 1, 'Question 2 for Survey 3 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+(5, 1, 'Question 3 for Survey 3 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW());
+
+#### Insert user group
+
+INSERT INTO usergroup (instanceid, userid, groupid, deleted, timestamp_created, timestamp_updated)
+VALUES
+(1, 2, 1, false, NOW(), NOW()),
+(1, 3, 2, false, NOW(), NOW()),
+(1, 4, 2, false, NOW(), NOW());
+
+#### Insert objectgroup
+
+INSERT INTO objectgroup (type, objectid, groupid, userid, instanceid, deleted, timestamp_created, timestamp_updated)
+VALUES
+('Survey', 1, 1, 2, 1, false, NOW(), NOW()),
+('Survey', 2, 1, 2, 1, false, NOW(), NOW()),
+('Survey', 3, 2, 3, 1, false, NOW(), NOW()),
+('Survey', 4, 2, 3, 1, false, NOW(), NOW()),
+('Survey', 5, 2, 3, 1, false, NOW(), NOW());
 
 # API Documentation
 
@@ -220,7 +293,7 @@ These additions enhance the flexibility and scalability of the system, allowing 
           "points": <point>,
           "timestampCreated": <create day>
         },
-        ... 
+        ...
       ]
     }
   }
@@ -542,7 +615,9 @@ These additions enhance the flexibility and scalability of the system, allowing 
 
 - Ensure proper handling and storage of tokens to maintain security and user sessions.
 
-## Documentation
+#
+
+# Documentation References
 
 [NestJS Documentation](https://docs.nestjs.com/)
 [Prisma Documentation](https://www.prisma.io/docs)
