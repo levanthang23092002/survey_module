@@ -116,7 +116,7 @@ These additions enhance the flexibility and scalability of the system, allowing 
   INSERT INTO survey (surveyname, surveydescription, thankyoumessage, displayinonepage, duration, password, showcorrectanswer, type, day, instanceid, points, groupid, hidden, timestamp_created, timestamp_updated)
   VALUES
   ('Survey 1 - Group 1', 'Survey 1 for Group 1', 'Thanks for completing Survey 1!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1,50,1, false, NOW(), NOW()),
-  ('Survey 2 - Group 1', 'Survey 2 for Group 1', 'Thanks for completing Survey 2!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,1, false, NOW(), NOW());
+  ('Survey 2 - Group 1', 'Survey 2 for Group 1', 'Thanks for completing Survey 2!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,1, false, NOW(), NOW()),
   ('Survey 1 - Group 2', 'Survey 1 for Group 2', 'Thanks for completing Survey 1!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,2, false, NOW(), NOW()),
   ('Survey 2 - Group 2', 'Survey 2 for Group 2', 'Thanks for completing Survey 2!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,2, false, NOW(), NOW()),
   ('Survey 3 - Group 2', 'Survey 3 for Group 2', 'Thanks for completing Survey 3!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1,50,2, false, NOW(), NOW());
@@ -134,7 +134,7 @@ These additions enhance the flexibility and scalability of the system, allowing 
   (2, 1, 'Question 2 for Survey 2 - Group 1', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
   (2, 1, 'Question 3 for Survey 2 - Group 1', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
   (2, 1, 'Question 4 for Survey 2 - Group 1', 4, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-  (2, 1, 'Question 5 for Survey 2 - Group 1', 5, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW());
+  (2, 1, 'Question 5 for Survey 2 - Group 1', 5, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
   (3, 1, 'Question 1 for Survey 1 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
   (3, 1, 'Question 2 for Survey 1 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
   (3, 1, 'Question 3 for Survey 1 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
