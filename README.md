@@ -92,77 +92,77 @@ These additions enhance the flexibility and scalability of the system, allowing 
 
 ### Database Setup
 
-#### Insert Users
-
-INSERT INTO user (username, email, password, firstName, lastName, role, createdAt, updatedAt)
-VALUES
-('john_doe', 'john.doe@example.com', 'password123', 'John', 'Doe', 'user', NOW(), NOW()),
-('jane_smith', 'jane.smith@example.com', 'password123', 'Jane', 'Smith', 'user', NOW(), NOW()),
-('bob_jones', 'bob.jones@example.com', 'password123', 'Bob', 'Jones', 'user', NOW(), NOW()),
-('alice_williams', 'alice.williams@example.com', 'password123', 'Alice', 'Williams', 'user', NOW(), NOW());
-
-#### Insert an Instance (Event)
-
-INSERT INTO instance (instanceName, instanceDescription, adminid, startDate, endDate, createdAt, updatedAt)
-VALUES ('Event 1', 'Description of Event 1', 1, '2024-08-20 00:00:00', '2024-08-30 23:59:59', NOW(), NOW());
-
-#### Insert Modules into the Instance
-
-INSERT INTO module (instanceid, moduleid, modulename, isDuplicated, displayOrder, activated, featured, options, iconid, iconColor, deleted, timestamp_created, timestamp_updated)
-VALUES (1, 1, 'Module 1', false, 1, true, true, '{"setting": "value"}', null, 'blue', false, NOW(), NOW());
-
-#### Insert Surveys
-
-INSERT INTO survey (surveyname, surveydescription, thankyoumessage, displayinonepage, duration, password, showcorrectanswer, type, day, instanceid, points, groupid, hidden, timestamp_created, timestamp_updated)
-VALUES
-('Survey 1 - Group 1', 'Survey 1 for Group 1', 'Thanks for completing Survey 1!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1,50,1, false, NOW(), NOW()),
-('Survey 2 - Group 1', 'Survey 2 for Group 1', 'Thanks for completing Survey 2!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,1, false, NOW(), NOW());
-('Survey 1 - Group 2', 'Survey 1 for Group 2', 'Thanks for completing Survey 1!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,2, false, NOW(), NOW()),
-('Survey 2 - Group 2', 'Survey 2 for Group 2', 'Thanks for completing Survey 2!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,2, false, NOW(), NOW()),
-('Survey 3 - Group 2', 'Survey 3 for Group 2', 'Thanks for completing Survey 3!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1,50,2, false, NOW(), NOW());
-
+#### Insert Users:
+  ```bash
+    INSERT INTO user (username, email, password, firstName, lastName, role, createdAt, updatedAt)
+    VALUES
+    ('john_doe', 'john.doe@example.com', 'password123', 'John', 'Doe', 'user', NOW(), NOW()),
+    ('jane_smith', 'jane.smith@example.com', 'password123', 'Jane', 'Smith', 'user', NOW(), NOW()),
+    ('bob_jones', 'bob.jones@example.com', 'password123', 'Bob', 'Jones', 'user', NOW(), NOW()),
+    ('alice_williams', 'alice.williams@example.com', 'password123', 'Alice', 'Williams', 'user', NOW(), NOW());
+  ```
+#### Insert an Instance (Event):
+  ```bash
+  INSERT INTO instance (instanceName, instanceDescription, adminid, startDate, endDate, createdAt, updatedAt)
+  VALUES ('Event 1', 'Description of Event 1', 1, '2024-08-20 00:00:00', '2024-08-30 23:59:59', NOW(), NOW());
+  ```
+#### Insert Modules into the Instance:
+  ```bash
+  INSERT INTO module (instanceid, moduleid, modulename, isDuplicated, displayOrder, activated, featured, options, iconid, iconColor, deleted, timestamp_created, timestamp_updated)
+  VALUES (1, 1, 'Module 1', false, 1, true, true, '{"setting": "value"}', null, 'blue', false, NOW(), NOW());
+  ```
+#### Insert Surveys:
+  ```bash
+  INSERT INTO survey (surveyname, surveydescription, thankyoumessage, displayinonepage, duration, password, showcorrectanswer, type, day, instanceid, points, groupid, hidden, timestamp_created, timestamp_updated)
+  VALUES
+  ('Survey 1 - Group 1', 'Survey 1 for Group 1', 'Thanks for completing Survey 1!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1,50,1, false, NOW(), NOW()),
+  ('Survey 2 - Group 1', 'Survey 2 for Group 1', 'Thanks for completing Survey 2!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,1, false, NOW(), NOW());
+  ('Survey 1 - Group 2', 'Survey 1 for Group 2', 'Thanks for completing Survey 1!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,2, false, NOW(), NOW()),
+  ('Survey 2 - Group 2', 'Survey 2 for Group 2', 'Thanks for completing Survey 2!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1, 50,2, false, NOW(), NOW()),
+  ('Survey 3 - Group 2', 'Survey 3 for Group 2', 'Thanks for completing Survey 3!', true, 30, 'survey123', true, 'multiple-choice', '2024-08-20', 1,50,2, false, NOW(), NOW());
+  ```
 #### Insert Survey Items for Surveys
-
-INSERT INTO surveyitem (surveyid, instanceid, question, questionnum, type, required, choice1, choice2, choice3, choice4, deleted, showDescription, shuffleChoice, hasCommentField, timestamp_updated)
-VALUES
-(1, 1, 'Question 1 for Survey 1 - Group 1', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(1, 1, 'Question 2 for Survey 1 - Group 1', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(1, 1, 'Question 3 for Survey 1 - Group 1', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(1, 1, 'Question 4 for Survey 1 - Group 1', 4, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(1, 1, 'Question 5 for Survey 1 - Group 1', 5, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(2, 1, 'Question 1 for Survey 2 - Group 1', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(2, 1, 'Question 2 for Survey 2 - Group 1', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(2, 1, 'Question 3 for Survey 2 - Group 1', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(2, 1, 'Question 4 for Survey 2 - Group 1', 4, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(2, 1, 'Question 5 for Survey 2 - Group 1', 5, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW());
-(3, 1, 'Question 1 for Survey 1 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(3, 1, 'Question 2 for Survey 1 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(3, 1, 'Question 3 for Survey 1 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(4, 1, 'Question 1 for Survey 2 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(4, 1, 'Question 2 for Survey 2 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(4, 1, 'Question 3 for Survey 2 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(5, 1, 'Question 1 for Survey 3 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(5, 1, 'Question 2 for Survey 3 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
-(5, 1, 'Question 3 for Survey 3 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW());
-
-#### Insert user group
-
-INSERT INTO usergroup (instanceid, userid, groupid, deleted, timestamp_created, timestamp_updated)
-VALUES
-(1, 2, 1, false, NOW(), NOW()),
-(1, 3, 2, false, NOW(), NOW()),
-(1, 4, 2, false, NOW(), NOW());
-
+  ```bash
+  INSERT INTO surveyitem (surveyid, instanceid, question, questionnum, type, required, choice1, choice2, choice3, choice4, deleted, showDescription, shuffleChoice, hasCommentField, timestamp_updated)
+  VALUES
+  (1, 1, 'Question 1 for Survey 1 - Group 1', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (1, 1, 'Question 2 for Survey 1 - Group 1', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (1, 1, 'Question 3 for Survey 1 - Group 1', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (1, 1, 'Question 4 for Survey 1 - Group 1', 4, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (1, 1, 'Question 5 for Survey 1 - Group 1', 5, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (2, 1, 'Question 1 for Survey 2 - Group 1', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (2, 1, 'Question 2 for Survey 2 - Group 1', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (2, 1, 'Question 3 for Survey 2 - Group 1', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (2, 1, 'Question 4 for Survey 2 - Group 1', 4, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (2, 1, 'Question 5 for Survey 2 - Group 1', 5, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW());
+  (3, 1, 'Question 1 for Survey 1 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (3, 1, 'Question 2 for Survey 1 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (3, 1, 'Question 3 for Survey 1 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (4, 1, 'Question 1 for Survey 2 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (4, 1, 'Question 2 for Survey 2 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (4, 1, 'Question 3 for Survey 2 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (5, 1, 'Question 1 for Survey 3 - Group 2', 1, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (5, 1, 'Question 2 for Survey 3 - Group 2', 2, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW()),
+  (5, 1, 'Question 3 for Survey 3 - Group 2', 3, 'multiple-choice', true, 'Choice 1', 'Choice 2', 'Choice 3', 'Choice 4', false, true, false, false, NOW());
+  ```
+#### Insert user group:
+  ```bash
+  INSERT INTO usergroup (instanceid, userid, groupid, deleted, timestamp_created, timestamp_updated)
+  VALUES
+  (1, 2, 1, false, NOW(), NOW()),
+  (1, 3, 2, false, NOW(), NOW()),
+  (1, 4, 2, false, NOW(), NOW());
+  ```
 #### Insert objectgroup
-
-INSERT INTO objectgroup (type, objectid, groupid, userid, instanceid, deleted, timestamp_created, timestamp_updated)
-VALUES
-('Survey', 1, 1, 2, 1, false, NOW(), NOW()),
-('Survey', 2, 1, 2, 1, false, NOW(), NOW()),
-('Survey', 3, 2, 3, 1, false, NOW(), NOW()),
-('Survey', 4, 2, 3, 1, false, NOW(), NOW()),
-('Survey', 5, 2, 3, 1, false, NOW(), NOW());
-
+  ```bash
+  INSERT INTO objectgroup (type, objectid, groupid, userid, instanceid, deleted, timestamp_created, timestamp_updated)
+  VALUES
+  ('Survey', 1, 1, 2, 1, false, NOW(), NOW()),
+  ('Survey', 2, 1, 2, 1, false, NOW(), NOW()),
+  ('Survey', 3, 2, 3, 1, false, NOW(), NOW()),
+  ('Survey', 4, 2, 3, 1, false, NOW(), NOW()),
+  ('Survey', 5, 2, 3, 1, false, NOW(), NOW());
+  ```
 # API Documentation
 
 ## API Documentation: Get Survey Results By ID
