@@ -368,7 +368,7 @@ VALUES
   ```json
   {
     "status": "success",
-    "message": "Survey details retrieved successfully",
+    "message": "Get all survey item retrieved successfully",
     "data": {
       "total": <total>,
       "data": [

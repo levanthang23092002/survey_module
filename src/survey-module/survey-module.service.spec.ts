@@ -112,7 +112,7 @@ describe('SurveyService', () => {
 
       expect(result).toEqual({
         status: 'success',
-        message: 'Survey details retrieved successfully',
+        message: 'Get all survey item retrieved successfully',
         data: {
           total: 1,
           data: surveyItem,

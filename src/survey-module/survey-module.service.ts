@@ -51,7 +51,7 @@ export class SurveyModuleService {
       };
       return {
         status: 'success',
-        message: 'Survey details retrieved successfully',
+        message: 'Get all survey item retrieved successfully',
         data: result,
       };
     }

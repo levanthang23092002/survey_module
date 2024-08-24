@@ -83,13 +83,13 @@ describe('SurveyModuleController', () => {
       jest
         .spyOn(surveyService, 'getDetailSurvey')
         .mockResolvedValue(
-          createMockSurveyDetail(surveyItem, 'Survey details '),
+          createMockSurveyDetail(surveyItem, 'Get all survey item '),
         );
 
       const result = await controller.getSurveyDetail(params, req);
 
       expect(result).toEqual(
-        createMockSurveyDetail(surveyItem, 'Survey details '),
+        createMockSurveyDetail(surveyItem, 'Get all survey item '),
       );
       //   expect(surveyService.getDetailSurvey).toHaveBeenCalledWith(
       //     req.user.userId,
