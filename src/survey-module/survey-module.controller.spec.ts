@@ -38,10 +38,10 @@ describe('SurveyModuleController', () => {
     moduleId: 1,
     surveyId: 1,
   };
-  function createMockSurveyDetail(data: any) {
+  function createMockSurveyDetail(data: any, text: string) {
     return {
       status: 'success',
-      message: 'Survey details retrieved successfully',
+      message: text + ' retrieved successfully',
       data: {
         total: Array.isArray(data) ? data.length : 1,
         data: data,
@@ -82,11 +82,15 @@ describe('SurveyModuleController', () => {
 
       jest
         .spyOn(surveyService, 'getDetailSurvey')
-        .mockResolvedValue(createMockSurveyDetail(surveyItem));
+        .mockResolvedValue(
+          createMockSurveyDetail(surveyItem, 'Survey details '),
+        );
 
       const result = await controller.getSurveyDetail(params, req);
 
-      expect(result).toEqual(createMockSurveyDetail(surveyItem));
+      expect(result).toEqual(
+        createMockSurveyDetail(surveyItem, 'Survey details '),
+      );
       //   expect(surveyService.getDetailSurvey).toHaveBeenCalledWith(
       //     req.user.userId,
       //     params,
@@ -126,16 +130,15 @@ describe('SurveyModuleController', () => {
 
       jest
         .spyOn(surveyService, 'getSurveys')
-        .mockResolvedValue(createMockSurveyDetail(listSurvers));
+        .mockResolvedValue(
+          createMockSurveyDetail(listSurvers, 'Get all surveys '),
+        );
 
       const result = await controller.getListSurvey(params, page, req);
 
-      expect(result).toEqual(createMockSurveyDetail(listSurvers));
-      //   expect(surveyService.getSurveys).toHaveBeenCalledWith(
-      //     req.user.userId,
-      //     params,
-      //     page,
-      //   );
+      expect(result).toEqual(
+        createMockSurveyDetail(listSurvers, 'Get all surveys '),
+      );
     });
 
     it('should throw NotFoundException when surveys not found', async () => {
@@ -172,11 +175,15 @@ describe('SurveyModuleController', () => {
 
       jest
         .spyOn(surveyService, 'getSurveyResponse')
-        .mockResolvedValue(createMockSurveyDetail(responses));
+        .mockResolvedValue(
+          createMockSurveyDetail(responses, 'Get Survey Results '),
+        );
 
       const result = await controller.getUserSurveyResponse(req, params);
 
-      expect(result).toEqual(createMockSurveyDetail(responses));
+      expect(result).toEqual(
+        createMockSurveyDetail(responses, 'Get Survey Results '),
+      );
       expect(surveyService.getSurveyResponse).toHaveBeenCalledWith(
         req.user.userId,
         params,
@@ -208,11 +215,13 @@ describe('SurveyModuleController', () => {
       };
       jest
         .spyOn(surveyService, 'addSurveyResponse')
-        .mockResolvedValue(createMockSurveyDetail(body));
+        .mockResolvedValue(createMockSurveyDetail(body, 'Post survey answer '));
 
       const result = await controller.addUserSurveyResponse(req, params, body);
 
-      expect(result).toEqual(createMockSurveyDetail(body));
+      expect(result).toEqual(
+        createMockSurveyDetail(body, 'Post survey answer '),
+      );
       expect(surveyService.addSurveyResponse).toHaveBeenCalledWith(
         req.user.userId,
         params,

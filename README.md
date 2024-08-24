@@ -179,7 +179,7 @@ VALUES
 
 # API Documentation
 
-## API Documentation: Get Survey Results By ID
+## API Documentation: Get All Survey Results
 
 ### Endpoint
 
@@ -206,7 +206,7 @@ VALUES
   ```json
   {
     "status": "success",
-    "message": "Survey details retrieved successfully",
+    "message": "Get Survey Results retrieved successfully",
     "data": {
       "total": <total>,
       "listSurvey": [
@@ -292,7 +292,7 @@ VALUES
   ```json
   {
     "status": "success",
-    "message": "Survey details retrieved successfully",
+    "message": "Get all surveys retrieved successfully",
     "data": {
       "total": <total>,
       "itemPerPage": <PerPage>,
@@ -477,7 +477,7 @@ VALUES
   ```json
   {
     "status": "success",
-    "message": "Survey details retrieved successfully",
+    "message": "Post survey answer retrieved successfully",
     "data": [
       {
         "surveyItemId": <surveyItemId>,

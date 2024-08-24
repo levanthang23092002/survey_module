@@ -184,7 +184,7 @@ describe('SurveyService', () => {
 
       expect(result).toEqual({
         status: 'success',
-        message: 'Survey details retrieved successfully',
+        message: 'Get all surveys retrieved successfully',
         data: {
           total: 2,
           itemPerPage: 10,
@@ -232,7 +232,7 @@ describe('SurveyService', () => {
 
       expect(result).toEqual({
         status: 'success',
-        message: 'Survey details retrieved successfully',
+        message: 'Get all surveys retrieved successfully',
         data: {
           total: 2,
           itemPerPage: 10,
@@ -324,7 +324,7 @@ describe('SurveyService', () => {
 
       expect(result).toEqual({
         status: 'success',
-        message: 'Survey details retrieved successfully',
+        message: 'Get Survey Results retrieved successfully',
         data: {
           total: 1,
           listSurvey: [{ userId: 1, responses: responses }],
@@ -360,7 +360,7 @@ describe('SurveyService', () => {
 
       expect(result).toEqual({
         status: 'success',
-        message: 'Survey details retrieved successfully',
+        message: 'Get Survey Results retrieved successfully',
         data: {
           total: 1,
           listSurvey: [{ userId: 1, responses: responseuser }],
@@ -448,129 +448,123 @@ describe('SurveyService', () => {
         surveyService.getSurveyResponse(userId, params),
       ).rejects.toThrow(new NotFoundException({ message: 'Not Found' }));
     });
-    describe('addSurveyResponse', () => {
-      const userId = 1;
-      const params = { eventId: 1, moduleId: 1, surveyId: 1 };
-      const body = {
-        data: [
-          { surveyItemId: 1, answer: 'Answer 1' },
-          { surveyItemId: 2, answer: 'Answer 2' },
-          { surveyItemId: 3, answer: 'Answer 3' },
-        ],
-      };
+  });
+  describe('addSurveyResponse', () => {
+    const userId = 1;
+    const params = { eventId: 1, moduleId: 1, surveyId: 1 };
+    const body = {
+      data: [
+        { surveyItemId: 1, answer: 'Answer 1' },
+        { surveyItemId: 2, answer: 'Answer 2' },
+        { surveyItemId: 3, answer: 'Answer 3' },
+      ],
+    };
 
-      it('should add survey response successfully', async () => {
-        jest
-          .spyOn(moduleActivationService, 'isSurveyModuleActivated')
-          .mockResolvedValue(true);
-        jest
-          .spyOn(groupService, 'getUserGroup')
-          .mockResolvedValue({ groupid: 1 });
-        jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(true);
-        jest.spyOn(groupService, 'isGroupInSurvey').mockResolvedValue(true);
-        jest.spyOn(surveyRepo, 'checkDataResponse').mockResolvedValue(true);
-        jest
-          .spyOn(surveyRepo, 'hasUserCompletedSurvey')
-          .mockResolvedValue(false);
-        jest
-          .spyOn(surveyRepo, 'addSurveyResponse')
-          .mockResolvedValue(body.data);
+    it('should add survey response successfully', async () => {
+      jest
+        .spyOn(moduleActivationService, 'isSurveyModuleActivated')
+        .mockResolvedValue(true);
+      jest
+        .spyOn(groupService, 'getUserGroup')
+        .mockResolvedValue({ groupid: 1 });
+      jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(true);
+      jest.spyOn(groupService, 'isGroupInSurvey').mockResolvedValue(true);
+      jest.spyOn(surveyRepo, 'checkDataResponse').mockResolvedValue(true);
+      jest.spyOn(surveyRepo, 'hasUserCompletedSurvey').mockResolvedValue(false);
+      jest.spyOn(surveyRepo, 'addSurveyResponse').mockResolvedValue(body.data);
 
-        const result = await surveyService.addSurveyResponse(
-          userId,
-          params,
-          body,
-        );
+      const result = await surveyService.addSurveyResponse(
+        userId,
+        params,
+        body,
+      );
 
-        expect(result.status).toBe('success');
-        expect(result.message).toBe('Survey details retrieved successfully');
-        expect(result.data).toEqual(body.data);
-      });
+      expect(result.status).toBe('success');
+      expect(result.message).toBe('Post survey answer retrieved successfully');
+      expect(result.data).toEqual(body.data);
+    });
 
-      it('should throw NotFoundException if module is not activated', async () => {
-        jest
-          .spyOn(moduleActivationService, 'isSurveyModuleActivated')
-          .mockResolvedValue(false);
+    it('should throw NotFoundException if module is not activated', async () => {
+      jest
+        .spyOn(moduleActivationService, 'isSurveyModuleActivated')
+        .mockResolvedValue(false);
 
-        await expect(
-          surveyService.addSurveyResponse(userId, params, body),
-        ).rejects.toThrow(NotFoundException);
-      });
+      await expect(
+        surveyService.addSurveyResponse(userId, params, body),
+      ).rejects.toThrow(NotFoundException);
+    });
 
-      it('should throw NotFoundException if user group is not found', async () => {
-        jest
-          .spyOn(moduleActivationService, 'isSurveyModuleActivated')
-          .mockResolvedValue(true);
-        jest.spyOn(groupService, 'getUserGroup').mockResolvedValue(null);
+    it('should throw NotFoundException if user group is not found', async () => {
+      jest
+        .spyOn(moduleActivationService, 'isSurveyModuleActivated')
+        .mockResolvedValue(true);
+      jest.spyOn(groupService, 'getUserGroup').mockResolvedValue(null);
 
-        await expect(
-          surveyService.addSurveyResponse(userId, params, body),
-        ).rejects.toThrow(NotFoundException);
-      });
+      await expect(
+        surveyService.addSurveyResponse(userId, params, body),
+      ).rejects.toThrow(NotFoundException);
+    });
 
-      it('should throw NotFoundException if group is not activated', async () => {
-        jest
-          .spyOn(moduleActivationService, 'isSurveyModuleActivated')
-          .mockResolvedValue(true);
-        jest
-          .spyOn(groupService, 'getUserGroup')
-          .mockResolvedValue({ groupid: 1 });
-        jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(false);
+    it('should throw NotFoundException if group is not activated', async () => {
+      jest
+        .spyOn(moduleActivationService, 'isSurveyModuleActivated')
+        .mockResolvedValue(true);
+      jest
+        .spyOn(groupService, 'getUserGroup')
+        .mockResolvedValue({ groupid: 1 });
+      jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(false);
 
-        await expect(
-          surveyService.addSurveyResponse(userId, params, body),
-        ).rejects.toThrow(NotFoundException);
-      });
+      await expect(
+        surveyService.addSurveyResponse(userId, params, body),
+      ).rejects.toThrow(NotFoundException);
+    });
 
-      it('should throw NotFoundException if group is not in survey', async () => {
-        jest
-          .spyOn(moduleActivationService, 'isSurveyModuleActivated')
-          .mockResolvedValue(true);
-        jest
-          .spyOn(groupService, 'getUserGroup')
-          .mockResolvedValue({ groupid: 1 });
-        jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(true);
-        jest.spyOn(groupService, 'isGroupInSurvey').mockResolvedValue(false);
+    it('should throw NotFoundException if group is not in survey', async () => {
+      jest
+        .spyOn(moduleActivationService, 'isSurveyModuleActivated')
+        .mockResolvedValue(true);
+      jest
+        .spyOn(groupService, 'getUserGroup')
+        .mockResolvedValue({ groupid: 1 });
+      jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(true);
+      jest.spyOn(groupService, 'isGroupInSurvey').mockResolvedValue(false);
 
-        await expect(
-          surveyService.addSurveyResponse(userId, params, body),
-        ).rejects.toThrow(NotFoundException);
-      });
+      await expect(
+        surveyService.addSurveyResponse(userId, params, body),
+      ).rejects.toThrow(NotFoundException);
+    });
 
-      it('should throw NotFoundException if data response is invalid', async () => {
-        jest
-          .spyOn(moduleActivationService, 'isSurveyModuleActivated')
-          .mockResolvedValue(true);
-        jest
-          .spyOn(groupService, 'getUserGroup')
-          .mockResolvedValue({ groupid: 1 });
-        jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(true);
-        jest.spyOn(groupService, 'isGroupInSurvey').mockResolvedValue(true);
-        jest.spyOn(surveyRepo, 'checkDataResponse').mockResolvedValue(false);
+    it('should throw NotFoundException if data response is invalid', async () => {
+      jest
+        .spyOn(moduleActivationService, 'isSurveyModuleActivated')
+        .mockResolvedValue(true);
+      jest
+        .spyOn(groupService, 'getUserGroup')
+        .mockResolvedValue({ groupid: 1 });
+      jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(true);
+      jest.spyOn(groupService, 'isGroupInSurvey').mockResolvedValue(true);
+      jest.spyOn(surveyRepo, 'checkDataResponse').mockResolvedValue(false);
 
-        await expect(
-          surveyService.addSurveyResponse(userId, params, body),
-        ).rejects.toThrow(NotFoundException);
-      });
+      await expect(
+        surveyService.addSurveyResponse(userId, params, body),
+      ).rejects.toThrow(NotFoundException);
+    });
 
-      it('should throw NotFoundException if user has already completed the survey', async () => {
-        jest
-          .spyOn(moduleActivationService, 'isSurveyModuleActivated')
-          .mockResolvedValue(true);
-        jest
-          .spyOn(groupService, 'getUserGroup')
-          .mockResolvedValue({ groupid: 1 });
-        jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(true);
-        jest.spyOn(groupService, 'isGroupInSurvey').mockResolvedValue(true);
-        jest.spyOn(surveyRepo, 'checkDataResponse').mockResolvedValue(true);
-        jest
-          .spyOn(surveyRepo, 'hasUserCompletedSurvey')
-          .mockResolvedValue(true);
+    it('should throw NotFoundException if user has already completed the survey', async () => {
+      jest
+        .spyOn(moduleActivationService, 'isSurveyModuleActivated')
+        .mockResolvedValue(true);
+      jest
+        .spyOn(groupService, 'getUserGroup')
+        .mockResolvedValue({ groupid: 1 });
+      jest.spyOn(groupService, 'isGroupActivated').mockResolvedValue(true);
+      jest.spyOn(groupService, 'isGroupInSurvey').mockResolvedValue(true);
+      jest.spyOn(surveyRepo, 'checkDataResponse').mockResolvedValue(true);
+      jest.spyOn(surveyRepo, 'hasUserCompletedSurvey').mockResolvedValue(true);
 
-        await expect(
-          surveyService.addSurveyResponse(userId, params, body),
-        ).rejects.toThrow(NotFoundException);
-      });
+      await expect(
+        surveyService.addSurveyResponse(userId, params, body),
+      ).rejects.toThrow(NotFoundException);
     });
   });
 });

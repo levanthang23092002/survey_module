@@ -135,7 +135,7 @@ export class SurveyModuleService {
 
       return {
         status: 'success',
-        message: 'Survey details retrieved successfully',
+        message: 'Get all surveys retrieved successfully',
         data: result,
       };
     }
@@ -176,7 +176,7 @@ export class SurveyModuleService {
 
     return {
       status: 'success',
-      message: 'Survey details retrieved successfully',
+      message: 'Get all surveys retrieved successfully',
       data: result,
     };
   }
@@ -211,7 +211,7 @@ export class SurveyModuleService {
       };
       return {
         status: 'success',
-        message: 'Survey details retrieved successfully',
+        message: 'Get Survey Results retrieved successfully',
         data: result,
       };
     }
@@ -265,7 +265,7 @@ export class SurveyModuleService {
     };
     return {
       status: 'success',
-      message: 'Survey details retrieved successfully',
+      message: 'Get Survey Results retrieved successfully',
       data: results,
     };
   }
@@ -356,7 +356,7 @@ export class SurveyModuleService {
     }
     return {
       status: 'success',
-      message: 'Survey details retrieved successfully',
+      message: 'Post survey answer retrieved successfully',
       data: data,
     };
   }
