@@ -9,8 +9,8 @@ import {
   BasicRouteParamsDto,
   SuccessResponseDto,
 } from './dto/survey.dto';
-import { ModuleActivationService } from 'src/module-activation/module-activation.service';
-import { GroupsService } from 'src/groups/groups.service';
+import { ModuleActivationService } from '../module-activation/module-activation.service';
+import { GroupsService } from '../groups/groups.service';
 
 @Injectable()
 export class SurveyModuleService {

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 
 @Injectable()
 export class GroupsService {
@@ -10,6 +10,9 @@ export class GroupsService {
         userid: userId,
         instanceid: instanceId,
         deleted: false,
+      },
+      select: {
+        groupid: true,
       },
     });
     return userGroup;
@@ -32,6 +35,9 @@ export class GroupsService {
         groupid: groupId,
         deleted: false,
         hidden: false,
+      },
+      select: {
+        groupid: true,
       },
     });
     return !!survey;

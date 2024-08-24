@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../../prisma.service';
 import { SurveyEntity } from '../entities/survey.entity';
 import { SurveyItemEntity } from '../entities/survey-item.entity';
 import {
@@ -82,7 +82,6 @@ export class SurveyModuleRepository {
 
     return groupedQuestions;
   }
-
   async checkDataResponse(
     surveyId: number,
     surveyItemId: number[],
@@ -108,9 +107,10 @@ export class SurveyModuleRepository {
       where: {
         surveyid: surveyId,
         userid: userId,
+        delete: false,
       },
     });
-    if (surveyItems.length == 0) {
+    if (!surveyItems || surveyItems.length < 1) {
       return false;
     } else {
       return true;
@@ -236,7 +236,6 @@ export class SurveyModuleRepository {
       },
     });
 
-    // Nhóm các câu trả lời theo userId
     const groupedResponses = responses.reduce((acc, response) => {
       const { userid, surveyItem, answer } = response;
 
@@ -258,10 +257,8 @@ export class SurveyModuleRepository {
       return acc;
     }, {});
 
-    // Chuyển đổi thành mảng để trả về
     return Object.values(groupedResponses);
   }
-
   async addSurveyResponse(datas: CreateSurveyResponseEntity[]): Promise<any> {
     try {
       const result = await this.prisma.surveyResponse.createMany({
