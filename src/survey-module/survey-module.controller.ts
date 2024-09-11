@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  NotFoundException,
   Param,
   Post,
   Query,
@@ -30,16 +29,8 @@ export class SurveyModuleController {
     @Param() params: SurveyRouteParamsDto,
     @Request() req,
   ): Promise<SuccessResponseDto> {
-    try {
-      const userid = req.user?.userId;
-      return await this.surveyService.getDetailSurvey(userid, params);
-    } catch (error) {
-      throw new NotFoundException({
-        status: 'error',
-        message: 'Survey not found',
-        errorCode: 'NOT_FOUND',
-      });
-    }
+    const userid = req.user?.userId;
+    return await this.surveyService.getDetailSurvey(userid, params);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -49,16 +40,8 @@ export class SurveyModuleController {
     @Query() page: InputSurvey,
     @Request() req,
   ): Promise<SuccessResponseDto> {
-    try {
-      const userid = req.user?.userId;
-      return await this.surveyService.getSurveys(userid, params, page);
-    } catch (error) {
-      throw new NotFoundException({
-        status: 'error',
-        message: 'Survey not found',
-        errorCode: 'NOT_FOUND',
-      });
-    }
+    const userid = req.user?.userId;
+    return await this.surveyService.getSurveys(userid, params, page);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -67,16 +50,8 @@ export class SurveyModuleController {
     @Request() req,
     @Param() params: SurveyRouteParamsDto,
   ): Promise<SuccessResponseDto> {
-    try {
-      const userid = req.user?.userId;
-      return await this.surveyService.getSurveyResponse(userid, params);
-    } catch (error) {
-      throw new NotFoundException({
-        status: 'error',
-        message: 'Survey not found',
-        errorCode: 'NOT_FOUND',
-      });
-    }
+    const userid = req.user?.userId;
+    return await this.surveyService.getSurveyResponse(userid, params);
   }
 
   @ApiBearerAuth('JWT-auth')
@@ -86,15 +61,7 @@ export class SurveyModuleController {
     @Param() params: SurveyRouteParamsDto,
     @Body() body: CreateSurveyResponse,
   ): Promise<SuccessResponseDto> {
-    try {
-      const userid = req.user?.userId;
-      return await this.surveyService.addSurveyResponse(userid, params, body);
-    } catch (error) {
-      throw new NotFoundException({
-        status: 'error',
-        message: 'Survey not found',
-        errorCode: 'NOT_FOUND',
-      });
-    }
+    const userid = req.user?.userId;
+    return await this.surveyService.addSurveyResponse(userid, params, body);
   }
 }
