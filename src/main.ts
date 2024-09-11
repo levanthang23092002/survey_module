@@ -2,17 +2,14 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { CorsOptions } from '@nestjs/common/interfaces/external/cors-options.interface';
+import { Logger } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+  const logger = new Logger('Bootstrap');
+  app.useLogger(logger);
   const configService = app.get(ConfigService);
-  app.enableCors({
-    origin: '*', // Cho phép tất cả các nguồn
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-  });
+
   const swaggerConfig = new DocumentBuilder()
     .setTitle('API with NestJS')
     .setDescription('API developed throughout the API with NestJS course')
@@ -26,6 +23,13 @@ async function bootstrap() {
       'JWT-auth',
     )
     .build();
+
+  app.enableCors({
+    origin: 'https://example.com', // Chỉ định nguồn được phép truy cập
+    methods: 'GET, POST',
+    credentials: true, // Nếu bạn muốn bật việc gửi cookie
+    allowedHeaders: 'Content-Type,Authorization',
+  });
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api', app, document);
