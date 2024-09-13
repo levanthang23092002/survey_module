@@ -6,11 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-<<<<<<< HEAD
     "build": "prisma generate",
-=======
-   "build": "tsc && prisma generate",
->>>>>>> aba5d4f79ee873acaf076b01a8c1732ad9dd4ef4
     "start": "node dist/main.js",
     "start:dev": "nest start --watch",
     "prisma:generate": "prisma generate",
