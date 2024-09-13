@@ -10,13 +10,13 @@ exports.SurveyModuleModule = void 0;
 const common_1 = require("@nestjs/common");
 const survey_module_controller_1 = require("./survey-module.controller");
 const survey_module_service_1 = require("./survey-module.service");
-const prisma_service_1 = require("../prisma.service");
+const prisma_service_1 = require("src/prisma.service");
 const survey_module_repository_1 = require("./repository/survey-module.repository");
-const module_activation_module_1 = require("../module-activation/module-activation.module");
-const module_activation_service_1 = require("../module-activation/module-activation.service");
-const groups_module_1 = require("../groups/groups.module");
-const groups_service_1 = require("../groups/groups.service");
-const auth_middleware_1 = require("../middleware/auth.middleware");
+const module_activation_module_1 = require("src/module-activation/module-activation.module");
+const module_activation_service_1 = require("src/module-activation/module-activation.service");
+const groups_module_1 = require("src/groups/groups.module");
+const groups_service_1 = require("src/groups/groups.service");
+const auth_middleware_1 = require("src/middleware/auth.middleware");
 let SurveyModuleModule = class SurveyModuleModule {
     configure(consumer) {
         consumer.apply(auth_middleware_1.AuthMiddleware).forRoutes(survey_module_controller_1.SurveyModuleController);

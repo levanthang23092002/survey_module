@@ -13,7 +13,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SurveyModuleController = void 0;
-const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const survey_module_service_1 = require("./survey-module.service");
 const survey_dto_1 = require("./dto/survey.dto");
@@ -43,7 +42,6 @@ exports.SurveyModuleController = SurveyModuleController;
 __decorate([
     (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Get)('event/:eventId/module/:moduleId/surveys/:surveyId'),
-    openapi.ApiResponse({ status: 200, type: require("./dto/survey.dto").SuccessResponseDto }),
     __param(0, (0, common_1.Param)()),
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
@@ -53,7 +51,6 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Get)('event/:eventId/module/:moduleId/surveys'),
-    openapi.ApiResponse({ status: 200, type: require("./dto/survey.dto").SuccessResponseDto }),
     __param(0, (0, common_1.Param)()),
     __param(1, (0, common_1.Query)()),
     __param(2, (0, common_1.Request)()),
@@ -65,7 +62,6 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Get)('event/:eventId/module/:moduleId/surveys/:surveyId/result'),
-    openapi.ApiResponse({ status: 200, type: require("./dto/survey.dto").SuccessResponseDto }),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Param)()),
     __metadata("design:type", Function),
@@ -75,7 +71,6 @@ __decorate([
 __decorate([
     (0, swagger_1.ApiBearerAuth)('JWT-auth'),
     (0, common_1.Post)('event/:eventId/module/:moduleId/surveys/:surveyId'),
-    openapi.ApiResponse({ status: 201, type: require("./dto/survey.dto").SuccessResponseDto }),
     __param(0, (0, common_1.Request)()),
     __param(1, (0, common_1.Param)()),
     __param(2, (0, common_1.Body)()),

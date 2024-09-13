@@ -10,13 +10,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SuccessResponseDto = exports.ErrorResponseDto = exports.SurveyRouteParamsDto = exports.BasicRouteParamsDto = exports.InputSurvey = exports.ListSurvey = exports.ListResultUserAnswer = exports.ListResultAnswer = exports.InputSurveyResponse = exports.CreateSurveyResponse = exports.DetailSurvey = void 0;
-const openapi = require("@nestjs/swagger");
 const class_validator_1 = require("class-validator");
 const swagger_1 = require("@nestjs/swagger");
 class DetailSurvey {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { data: { required: true, type: () => [require("../entities/survey-item.entity").SurveyItemEntity] }, total: { required: true, type: () => Number } };
-    }
 }
 exports.DetailSurvey = DetailSurvey;
 __decorate([
@@ -28,9 +24,6 @@ __decorate([
     __metadata("design:type", Number)
 ], DetailSurvey.prototype, "total", void 0);
 class CreateSurveyResponse {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { data: { required: true, type: () => [require("./survey.dto").InputSurveyResponse] } };
-    }
 }
 exports.CreateSurveyResponse = CreateSurveyResponse;
 __decorate([
@@ -38,9 +31,6 @@ __decorate([
     __metadata("design:type", Array)
 ], CreateSurveyResponse.prototype, "data", void 0);
 class InputSurveyResponse {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { surveyItemId: { required: true, type: () => Number }, answer: { required: true, type: () => String } };
-    }
 }
 exports.InputSurveyResponse = InputSurveyResponse;
 __decorate([
@@ -48,21 +38,12 @@ __decorate([
     __metadata("design:type", Number)
 ], InputSurveyResponse.prototype, "surveyItemId", void 0);
 class ListResultAnswer {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { total: { required: true, type: () => Number }, listSurvey: { required: true, type: () => [require("./survey.dto").ListResultUserAnswer] } };
-    }
 }
 exports.ListResultAnswer = ListResultAnswer;
 class ListResultUserAnswer {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { userId: { required: true, type: () => Number }, responses: { required: true, type: () => [require("../entities/survey-response").SurveyResponseEntity] } };
-    }
 }
 exports.ListResultUserAnswer = ListResultUserAnswer;
 class ListSurvey {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { listSurvey: { required: true, type: () => [require("../entities/survey.entity").SurveyEntity] }, total: { required: true, type: () => Number }, itemPerPage: { required: true, type: () => Number, maximum: 100 }, page: { required: true, type: () => Number } };
-    }
 }
 exports.ListSurvey = ListSurvey;
 __decorate([
@@ -83,9 +64,6 @@ __decorate([
     __metadata("design:type", Number)
 ], ListSurvey.prototype, "page", void 0);
 class InputSurvey {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { page: { required: false, type: () => Number }, itemPerPage: { required: false, type: () => Number, maximum: 50 } };
-    }
 }
 exports.InputSurvey = InputSurvey;
 __decorate([
@@ -98,9 +76,6 @@ __decorate([
     __metadata("design:type", Number)
 ], InputSurvey.prototype, "itemPerPage", void 0);
 class BasicRouteParamsDto {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { eventId: { required: true, type: () => Number }, moduleId: { required: true, type: () => Number } };
-    }
 }
 exports.BasicRouteParamsDto = BasicRouteParamsDto;
 __decorate([
@@ -118,9 +93,6 @@ __decorate([
     __metadata("design:type", Number)
 ], BasicRouteParamsDto.prototype, "moduleId", void 0);
 class SurveyRouteParamsDto extends BasicRouteParamsDto {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { surveyId: { required: true, type: () => Number } };
-    }
 }
 exports.SurveyRouteParamsDto = SurveyRouteParamsDto;
 __decorate([
@@ -131,15 +103,9 @@ __decorate([
     __metadata("design:type", Number)
 ], SurveyRouteParamsDto.prototype, "surveyId", void 0);
 class ErrorResponseDto {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { status: { required: true, type: () => String }, message: { required: true, type: () => String }, errorCode: { required: false, type: () => String } };
-    }
 }
 exports.ErrorResponseDto = ErrorResponseDto;
 class SuccessResponseDto {
-    static _OPENAPI_METADATA_FACTORY() {
-        return { status: { required: true, type: () => String }, message: { required: true, type: () => String }, data: { required: true, type: () => Object } };
-    }
 }
 exports.SuccessResponseDto = SuccessResponseDto;
 __decorate([

@@ -10,7 +10,7 @@ exports.ModuleActivationModule = void 0;
 const common_1 = require("@nestjs/common");
 const module_activation_service_1 = require("./module-activation.service");
 const module_activation_controller_1 = require("./module-activation.controller");
-const prisma_service_1 = require("../prisma.service");
+const prisma_service_1 = require("src/prisma.service");
 let ModuleActivationModule = class ModuleActivationModule {
 };
 exports.ModuleActivationModule = ModuleActivationModule;

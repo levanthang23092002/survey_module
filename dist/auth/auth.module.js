@@ -10,7 +10,7 @@ exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
 const auth_controller_1 = require("./auth.controller");
-const prisma_service_1 = require("../prisma.service");
+const prisma_service_1 = require("src/prisma.service");
 const jwt_1 = require("@nestjs/jwt");
 let AuthModule = class AuthModule {
 };

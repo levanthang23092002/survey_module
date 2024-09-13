@@ -10,7 +10,7 @@ exports.GroupsModule = void 0;
 const common_1 = require("@nestjs/common");
 const groups_service_1 = require("./groups.service");
 const groups_controller_1 = require("./groups.controller");
-const prisma_service_1 = require("../prisma.service");
+const prisma_service_1 = require("src/prisma.service");
 let GroupsModule = class GroupsModule {
 };
 exports.GroupsModule = GroupsModule;
