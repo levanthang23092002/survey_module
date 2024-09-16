@@ -1,7 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { LoginDto } from './dto/login.dto';
+import { LoginDto, RegisterDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
+
 
 @Injectable()
 export class AuthService {
@@ -29,5 +35,40 @@ export class AuthService {
       expiresIn: '1h',
     });
     return { accesstoken, payload };
+  };
+
+  register = async (userData: RegisterDto): Promise<any> => {
+    const user = await this.prisma.user.findUnique({
+      where: { email: userData.email },
+    });
+
+    if (user) {
+      throw new HttpException(
+        { message: 'This email has already been used' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+
+    const { userName, passWord, confirmPassWord, ...rest } = userData;
+    if (passWord !== confirmPassWord) {
+      throw new HttpException(
+        { message: 'password and confirm password must be equal' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const newUserData = {
+      ...rest,
+      username: userName,
+      role: 'user',
+      password: passWord,
+    };
+
+    // Lưu người dùng vào cơ sở dữ liệu mà không mã hóa mật khẩu
+    const newUser = await this.prisma.user.create({
+      data: newUserData,
+    });
+
+    return newUser;
   };
 }

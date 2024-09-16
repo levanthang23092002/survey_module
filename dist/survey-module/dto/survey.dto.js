@@ -105,14 +105,14 @@ class BasicRouteParamsDto {
 exports.BasicRouteParamsDto = BasicRouteParamsDto;
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 12345,
+        example: 1,
     }),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
 ], BasicRouteParamsDto.prototype, "eventId", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 12345,
+        example: 1,
     }),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)
@@ -125,7 +125,7 @@ class SurveyRouteParamsDto extends BasicRouteParamsDto {
 exports.SurveyRouteParamsDto = SurveyRouteParamsDto;
 __decorate([
     (0, swagger_1.ApiProperty)({
-        example: 12345,
+        example: 1,
     }),
     (0, class_validator_1.IsNumber)(),
     __metadata("design:type", Number)

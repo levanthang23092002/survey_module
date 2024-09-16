@@ -52,13 +52,13 @@ export class InputSurvey {
 
 export class BasicRouteParamsDto {
   @ApiProperty({
-    example: 12345,
+    example: 1,
   })
   @IsNumber()
   eventId: number;
 
   @ApiProperty({
-    example: 12345,
+    example: 1,
   })
   @IsNumber()
   moduleId: number;
@@ -66,7 +66,7 @@ export class BasicRouteParamsDto {
 
 export class SurveyRouteParamsDto extends BasicRouteParamsDto {
   @ApiProperty({
-    example: 12345,
+    example: 1,
   })
   @IsNumber()
   surveyId: number;

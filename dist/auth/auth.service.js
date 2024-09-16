@@ -38,6 +38,28 @@ let AuthService = class AuthService {
             });
             return { accesstoken, payload };
         };
+        this.register = async (userData) => {
+            const user = await this.prisma.user.findUnique({
+                where: { email: userData.email },
+            });
+            if (user) {
+                throw new common_1.HttpException({ message: 'This email has already been used' }, common_1.HttpStatus.BAD_REQUEST);
+            }
+            const { userName, passWord, confirmPassWord, ...rest } = userData;
+            if (passWord !== confirmPassWord) {
+                throw new common_1.HttpException({ message: 'password and confirm password must be equal' }, common_1.HttpStatus.BAD_REQUEST);
+            }
+            const newUserData = {
+                ...rest,
+                username: userName,
+                role: 'user',
+                password: passWord,
+            };
+            const newUser = await this.prisma.user.create({
+                data: newUserData,
+            });
+            return newUser;
+        };
     }
 };
 exports.AuthService = AuthService;
