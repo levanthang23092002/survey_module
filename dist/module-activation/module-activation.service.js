@@ -17,7 +17,7 @@ let ModuleActivationService = class ModuleActivationService {
         this.prisma = prisma;
     }
     async isSurveyModuleActivated(moduleId, instanceId) {
-        const module = await this.prisma.module.findFirst({
+        const module = await this.prisma.module.findUnique({
             where: {
                 id: moduleId,
                 instanceid: instanceId,
@@ -28,7 +28,7 @@ let ModuleActivationService = class ModuleActivationService {
         return !!module;
     }
     async isGroupActivated(userGroupId, instanceId) {
-        const objectGroup = await this.prisma.objectGroup.findFirst({
+        const objectGroup = await this.prisma.objectGroup.findMany({
             where: {
                 groupid: userGroupId,
                 instanceid: instanceId,
@@ -38,7 +38,7 @@ let ModuleActivationService = class ModuleActivationService {
         return !!objectGroup;
     }
     async isGroupInSurvey(surveyId, groupId, instanceId) {
-        const survey = await this.prisma.survey.findFirst({
+        const survey = await this.prisma.survey.findUnique({
             where: {
                 surveyid: surveyId,
                 instanceid: instanceId,
