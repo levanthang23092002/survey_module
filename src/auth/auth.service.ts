@@ -8,7 +8,6 @@ import { PrismaService } from '../prisma.service';
 import { LoginDto, RegisterDto } from './dto/login.dto';
 import { JwtService } from '@nestjs/jwt';
 
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -48,7 +47,6 @@ export class AuthService {
         HttpStatus.BAD_REQUEST,
       );
     }
-
 
     const { userName, passWord, confirmPassWord, ...rest } = userData;
     if (passWord !== confirmPassWord) {

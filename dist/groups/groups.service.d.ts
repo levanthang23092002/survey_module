@@ -7,4 +7,5 @@ export declare class GroupsService {
     }>;
     isGroupActivated(userGroupId: number, instanceId: number): Promise<boolean>;
     isGroupInSurvey(surveyId: number, groupId: number, instanceId: number): Promise<boolean>;
+    createGroup(userId: number, instanceId: number): Promise<any>;
 }

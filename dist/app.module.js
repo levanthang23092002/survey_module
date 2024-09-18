@@ -15,6 +15,7 @@ const survey_module_module_1 = require("./survey-module/survey-module.module");
 const module_activation_module_1 = require("./module-activation/module-activation.module");
 const groups_module_1 = require("./groups/groups.module");
 const auth_module_1 = require("./auth/auth.module");
+const instance_module_1 = require("./instance/instance.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -28,6 +29,7 @@ exports.AppModule = AppModule = __decorate([
             module_activation_module_1.ModuleActivationModule,
             groups_module_1.GroupsModule,
             auth_module_1.AuthModule,
+            instance_module_1.InstanceModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

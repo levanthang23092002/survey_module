@@ -54,6 +54,9 @@ let GroupsService = class GroupsService {
         });
         return !!survey;
     }
+    async createGroup(userId, instanceId) {
+        return 'a';
+    }
 };
 exports.GroupsService = GroupsService;
 exports.GroupsService = GroupsService = __decorate([

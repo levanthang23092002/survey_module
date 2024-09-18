@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
+import { UserGroup } from '@prisma/client';
 
 @Injectable()
 export class GroupsService {
@@ -41,5 +42,9 @@ export class GroupsService {
       },
     });
     return !!survey;
+  }
+
+  async createGroup(userId: number, instanceId: number): Promise<any> {
+    return 'a';
   }
 }
