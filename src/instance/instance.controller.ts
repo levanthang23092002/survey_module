@@ -1,4 +1,12 @@
-import { Body, Controller, Param, Post, Put, Request } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Request,
+} from '@nestjs/common';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { InstanceService } from './instance.service';
 import { Instance } from '@prisma/client';
@@ -28,5 +36,22 @@ export class InstanceController {
   ): Promise<Instance> {
     const userId = req.user?.userId;
     return this.instance.UpadteInstance(userId, instanceId.instanceId, body);
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @Get('view-All')
+  viewAllInstance(@Request() req): Promise<Instance[]> {
+    const userId = req.user?.userId;
+    return this.instance.viewAllInstance(userId);
+  }
+
+  @ApiBearerAuth('JWT-auth')
+  @Get('view-detail/:instanceId')
+  viewDetailInstance(
+    @Request() req,
+    @Param() input: InstanceId,
+  ): Promise<Instance> {
+    const userId = req.user?.userId;
+    return this.instance.viewDetailInstance(userId, Number(input.instanceId ));
   }
 }

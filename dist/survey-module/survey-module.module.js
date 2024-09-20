@@ -17,6 +17,7 @@ const module_activation_service_1 = require("../module-activation/module-activat
 const groups_module_1 = require("../groups/groups.module");
 const groups_service_1 = require("../groups/groups.service");
 const auth_middleware_1 = require("../middleware/auth.middleware");
+const group_reponsitory_1 = require("../groups/reponsitory/group.reponsitory");
 let SurveyModuleModule = class SurveyModuleModule {
     configure(consumer) {
         consumer.apply(auth_middleware_1.AuthMiddleware).forRoutes(survey_module_controller_1.SurveyModuleController);
@@ -33,6 +34,7 @@ exports.SurveyModuleModule = SurveyModuleModule = __decorate([
             survey_module_repository_1.SurveyModuleRepository,
             module_activation_service_1.ModuleActivationService,
             groups_service_1.GroupsService,
+            group_reponsitory_1.GroupRepository,
         ],
     })
 ], SurveyModuleModule);

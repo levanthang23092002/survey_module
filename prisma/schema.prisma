@@ -154,7 +154,7 @@ model UserGroup {
   usergroupid       Int       @id @default(autoincrement())
   instanceid        Int
   userid            Int
-  groupid           Int
+  groupid           Int?
   deleted           Boolean   @default(false)
   timestamp_created DateTime  @default(now())
   timestamp_updated DateTime  @updatedAt

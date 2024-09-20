@@ -11,13 +11,18 @@ const common_1 = require("@nestjs/common");
 const groups_service_1 = require("./groups.service");
 const groups_controller_1 = require("./groups.controller");
 const prisma_service_1 = require("../prisma.service");
+const auth_middleware_1 = require("../middleware/auth.middleware");
+const group_reponsitory_1 = require("./reponsitory/group.reponsitory");
 let GroupsModule = class GroupsModule {
+    configure(consumer) {
+        consumer.apply(auth_middleware_1.AuthMiddleware).forRoutes(groups_controller_1.GroupsController);
+    }
 };
 exports.GroupsModule = GroupsModule;
 exports.GroupsModule = GroupsModule = __decorate([
     (0, common_1.Module)({
         controllers: [groups_controller_1.GroupsController],
-        providers: [groups_service_1.GroupsService, prisma_service_1.PrismaService],
+        providers: [groups_service_1.GroupsService, prisma_service_1.PrismaService, group_reponsitory_1.GroupRepository],
     })
 ], GroupsModule);
 //# sourceMappingURL=groups.module.js.map

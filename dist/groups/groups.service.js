@@ -12,9 +12,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.GroupsService = void 0;
 const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma.service");
+const group_reponsitory_1 = require("./reponsitory/group.reponsitory");
 let GroupsService = class GroupsService {
-    constructor(prisma) {
+    constructor(prisma, groupRepo) {
         this.prisma = prisma;
+        this.groupRepo = groupRepo;
     }
     async getUserGroup(userId, instanceId) {
         const userGroup = await this.prisma.userGroup.findFirst({
@@ -55,12 +57,63 @@ let GroupsService = class GroupsService {
         return !!survey;
     }
     async createGroup(userId, instanceId) {
-        return 'a';
+        const data = {
+            userid: userId,
+            instanceid: instanceId,
+            deleted: false,
+        };
+        const checkIntance = await this.groupRepo.checkInstance(userId, instanceId);
+        console.log(checkIntance);
+        if (checkIntance == false) {
+            throw new common_1.BadRequestException({
+                message: 'You do not have permission to create a group for this event.',
+            });
+        }
+        const userGroup = this.prisma.userGroup.create({
+            data: data,
+        });
+        return userGroup;
+    }
+    async deleteGroup(userId, instanceId, groupId) {
+        const data = {
+            deleted: true,
+        };
+        const checkIntance = await this.groupRepo.checkInstance(userId, instanceId);
+        console.log(checkIntance);
+        if (checkIntance == false) {
+            throw new common_1.BadRequestException({
+                message: 'You do not have permission to create a group for this event.',
+            });
+        }
+        const userGroup = await this.prisma.userGroup.updateMany({
+            where: {
+                instanceid: instanceId,
+                userid: userId,
+                groupid: groupId,
+            },
+            data: data,
+        });
+        if (userGroup.count === 1) {
+            return 'you have deleted successfully';
+        }
+        else {
+            return 'you have failed to delete';
+        }
+    }
+    async viewGroup(userId, instanceId) {
+        const group = await this.prisma.userGroup.findMany({
+            where: {
+                userid: userId,
+                instanceid: instanceId,
+            },
+        });
+        return group;
     }
 };
 exports.GroupsService = GroupsService;
 exports.GroupsService = GroupsService = __decorate([
     (0, common_1.Injectable)(),
-    __metadata("design:paramtypes", [prisma_service_1.PrismaService])
+    __metadata("design:paramtypes", [prisma_service_1.PrismaService,
+        group_reponsitory_1.GroupRepository])
 ], GroupsService);
 //# sourceMappingURL=groups.service.js.map

@@ -109,4 +109,26 @@ export class InstanceService {
     });
     return newInstance;
   };
+
+  viewAllInstance = async (userId: number): Promise<Instance[]> => {
+    const instance = await this.prisma.instance.findMany({
+      where: {
+        adminid: userId,
+      },
+    });
+    return instance;
+  };
+
+  viewDetailInstance = async (
+    userId: number,
+    instanceId: number,
+  ): Promise<Instance> => {
+    const viewDetail = await this.prisma.instance.findUnique({
+      where: {
+        adminid: userId,
+        instanceid: instanceId,
+      },
+    });
+    return viewDetail;
+  };
 }

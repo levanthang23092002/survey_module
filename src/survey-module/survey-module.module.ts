@@ -8,6 +8,7 @@ import { ModuleActivationService } from 'src/module-activation/module-activation
 import { GroupsModule } from 'src/groups/groups.module';
 import { GroupsService } from 'src/groups/groups.service';
 import { AuthMiddleware } from 'src/middleware/auth.middleware';
+import { GroupRepository } from 'src/groups/reponsitory/group.reponsitory';
 
 @Module({
   imports: [ModuleActivationModule, GroupsModule],
@@ -18,6 +19,7 @@ import { AuthMiddleware } from 'src/middleware/auth.middleware';
     SurveyModuleRepository,
     ModuleActivationService,
     GroupsService,
+    GroupRepository,
   ],
 })
 export class SurveyModuleModule {
