@@ -203,9 +203,9 @@ model ModuleAvailable {
 model ObjectGroup {
   id                Int       @id @default(autoincrement())
   type              String
-  objectid          Int
-  groupid           Int
-  userid            Int?
+  objectid          Int?
+  groupid           Int?
+  userid            Int
   instanceid        Int
   deleted           Boolean   @default(false)
   timestamp_created DateTime  @default(now())

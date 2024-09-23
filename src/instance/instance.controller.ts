@@ -52,6 +52,6 @@ export class InstanceController {
     @Param() input: InstanceId,
   ): Promise<Instance> {
     const userId = req.user?.userId;
-    return this.instance.viewDetailInstance(userId, Number(input.instanceId ));
+    return this.instance.viewDetailInstance(userId, Number(input.instanceId));
   }
 }
