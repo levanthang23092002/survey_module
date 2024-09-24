@@ -7,6 +7,7 @@ import { ModuleActivationModule } from './module-activation/module-activation.mo
 import { GroupsModule } from './groups/groups.module';
 import { AuthModule } from './auth/auth.module';
 import { InstanceModule } from './instance/instance.module';
+import { SurveyModule } from './survey/survey.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { InstanceModule } from './instance/instance.module';
     GroupsModule,
     AuthModule,
     InstanceModule,
+    SurveyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
